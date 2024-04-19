@@ -1,4 +1,4 @@
-﻿Param(
+Param(
     [String] $InputPath,
     [String] $OutputPath
 )

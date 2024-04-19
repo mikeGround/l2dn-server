@@ -5,55 +5,53 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{DFA73437-B031-4122-9524-327EE8A98F88}"
 	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
 		Documentation\Clients.md = Documentation\Clients.md
 		Documentation\Links.txt = Documentation\Links.txt
 		..\README.md = ..\README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L2Dn.Protocol", "L2Dn.Protocol\L2Dn.Protocol.csproj", "{9CE64212-70CD-4B05-B0FF-40CED4939EF8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "L2Dn.Protocol", "L2Dn.Protocol\L2Dn.Protocol.csproj", "{9CE64212-70CD-4B05-B0FF-40CED4939EF8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L2Dn.AuthServer", "L2Dn.AuthServer\L2Dn.AuthServer.csproj", "{44FBD2D2-EB06-4B69-A8CB-43ECEC193451}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "L2Dn.AuthServer", "L2Dn.AuthServer\L2Dn.AuthServer.csproj", "{44FBD2D2-EB06-4B69-A8CB-43ECEC193451}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L2Dn.GameServer", "L2Dn.GameServer\L2Dn.GameServer.csproj", "{A1D21622-E198-4AD7-9C64-4B9DB7311ADF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "L2Dn.GameServer", "L2Dn.GameServer\L2Dn.GameServer.csproj", "{A1D21622-E198-4AD7-9C64-4B9DB7311ADF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L2Dn.UnitTests", "L2Dn.UnitTests\L2Dn.UnitTests.csproj", "{34959900-A036-4788-92C2-09784738BC50}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "L2Dn.UnitTests", "L2Dn.UnitTests\L2Dn.UnitTests.csproj", "{34959900-A036-4788-92C2-09784738BC50}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L2Dn.Cryptography", "L2Dn.Cryptography\L2Dn.Cryptography.csproj", "{78ADB5BF-4BF5-4881-802C-F43FECF22562}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "L2Dn.Cryptography", "L2Dn.Cryptography\L2Dn.Cryptography.csproj", "{78ADB5BF-4BF5-4881-802C-F43FECF22562}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L2Dn.Packages", "L2Dn.Packages\L2Dn.Packages.csproj", "{6CF11849-E3A1-4C28-BC6D-B8F178AD2CE9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "L2Dn.Packages", "L2Dn.Packages\L2Dn.Packages.csproj", "{6CF11849-E3A1-4C28-BC6D-B8F178AD2CE9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L2Dn.Common", "L2Dn.Common\L2Dn.Common.csproj", "{869C2E73-C623-4FEC-BB1D-4EEA50151D77}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "L2Dn.Common", "L2Dn.Common\L2Dn.Common.csproj", "{869C2E73-C623-4FEC-BB1D-4EEA50151D77}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L2Dn.AuthServer.Db", "L2Dn.AuthServer.Db\L2Dn.AuthServer.Db.csproj", "{08A89FD1-ADE8-495D-84B0-30A4A4AEFFC4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "L2Dn.AuthServer.Db", "L2Dn.AuthServer.Db\L2Dn.AuthServer.Db.csproj", "{08A89FD1-ADE8-495D-84B0-30A4A4AEFFC4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L2Dn.GameServer.Db", "L2Dn.GameServer.Db\L2Dn.GameServer.Db.csproj", "{E9336906-23E6-4B08-9198-8A71D428A115}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "L2Dn.GameServer.Db", "L2Dn.GameServer.Db\L2Dn.GameServer.Db.csproj", "{E9336906-23E6-4B08-9198-8A71D428A115}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L2Dn.Model", "L2Dn.Model\L2Dn.Model.csproj", "{18FC3AFF-D35C-4E80-9935-AF065106DDC9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "L2Dn.Model", "L2Dn.Model\L2Dn.Model.csproj", "{18FC3AFF-D35C-4E80-9935-AF065106DDC9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L2Dn.GameServer.Model", "L2Dn.GameServer.Model\L2Dn.GameServer.Model.csproj", "{9317B267-DE13-4F43-9F70-3FDD1CEC1C7A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "L2Dn.GameServer.Model", "L2Dn.GameServer.Model\L2Dn.GameServer.Model.csproj", "{9317B267-DE13-4F43-9F70-3FDD1CEC1C7A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L2Dn.GameServer.Scripts", "L2Dn.GameServer.Scripts\L2Dn.GameServer.Scripts.csproj", "{3C481907-5B17-42B7-939A-AEA051AB413F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "L2Dn.GameServer.Scripts", "L2Dn.GameServer.Scripts\L2Dn.GameServer.Scripts.csproj", "{3C481907-5B17-42B7-939A-AEA051AB413F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{D0D1C649-0380-4215-BB98-E9CB894967FE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildDataPackDb", "Tools\BuildDataPackDb\BuildDataPackDb.csproj", "{E5F30E23-AABE-4765-99F3-035FC63944B3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BuildDataPackDb", "Tools\BuildDataPackDb\BuildDataPackDb.csproj", "{E5F30E23-AABE-4765-99F3-035FC63944B3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{4C41288F-D39F-4491-894F-DE5C84553384}"
 	ProjectSection(SolutionItems) = preProject
 		Scripts\GenerateHashJson.ps1 = Scripts\GenerateHashJson.ps1
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L2Dn.DataPack.Editor", "Tools\L2Dn.DataPack.Editor\L2Dn.DataPack.Editor.csproj", "{952801F8-615D-4E52-A518-F54D53DD89DE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "L2Dn.DataPack.Editor", "Tools\L2Dn.DataPack.Editor\L2Dn.DataPack.Editor.csproj", "{952801F8-615D-4E52-A518-F54D53DD89DE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L2Dn.DataPack.Db", "Tools\L2Dn.DataPack.Db\L2Dn.DataPack.Db.csproj", "{A588F5B3-3579-411B-BC79-DD8BD8485C49}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "L2Dn.DataPack.Db", "Tools\L2Dn.DataPack.Db\L2Dn.DataPack.Db.csproj", "{A588F5B3-3579-411B-BC79-DD8BD8485C49}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{9CE64212-70CD-4B05-B0FF-40CED4939EF8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -116,6 +114,9 @@ Global
 		{A588F5B3-3579-411B-BC79-DD8BD8485C49}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A588F5B3-3579-411B-BC79-DD8BD8485C49}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A588F5B3-3579-411B-BC79-DD8BD8485C49}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{E5F30E23-AABE-4765-99F3-035FC63944B3} = {D0D1C649-0380-4215-BB98-E9CB894967FE}
