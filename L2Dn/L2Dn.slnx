@@ -1,0 +1,28 @@
+<Solution>
+  <Folder Name="/Tools/">
+    <Project Path="Tools\BuildDataPackDb\BuildDataPackDb.csproj" />
+    <Project Path="Tools\L2Dn.DataPack.Db\L2Dn.DataPack.Db.csproj" />
+    <Project Path="Tools\L2Dn.DataPack.Editor\L2Dn.DataPack.Editor.csproj" />
+  </Folder>
+  <Folder Name="/Scripts/">
+    <File Path="Scripts\GenerateHashJson.ps1" />
+  </Folder>
+  <Folder Name="/Documentation/">
+    <File Path=".editorconfig" />
+    <File Path="Documentation\Clients.md" />
+    <File Path="Documentation\Links.txt" />
+    <File Path="..\README.md" />
+  </Folder>
+  <Project Path="L2Dn.AuthServer.Db\L2Dn.AuthServer.Db.csproj" />
+  <Project Path="L2Dn.AuthServer\L2Dn.AuthServer.csproj" />
+  <Project Path="L2Dn.Common\L2Dn.Common.csproj" />
+  <Project Path="L2Dn.Cryptography\L2Dn.Cryptography.csproj" />
+  <Project Path="L2Dn.GameServer.Db\L2Dn.GameServer.Db.csproj" />
+  <Project Path="L2Dn.GameServer.Model\L2Dn.GameServer.Model.csproj" />
+  <Project Path="L2Dn.GameServer.Scripts\L2Dn.GameServer.Scripts.csproj" />
+  <Project Path="L2Dn.GameServer\L2Dn.GameServer.csproj" />
+  <Project Path="L2Dn.Model\L2Dn.Model.csproj" />
+  <Project Path="L2Dn.Packages\L2Dn.Packages.csproj" />
+  <Project Path="L2Dn.Protocol\L2Dn.Protocol.csproj" />
+  <Project Path="L2Dn.UnitTests\L2Dn.UnitTests.csproj" />
+</Solution>
