@@ -7,6 +7,7 @@ using L2Dn.GameServer.Model.Holders;
 using L2Dn.GameServer.Network;
 using L2Dn.GameServer.Network.OutgoingPackets;
 using L2Dn.GameServer.Utilities;
+using L2Dn.Utilities;
 using Microsoft.EntityFrameworkCore;
 using NLog;
 
@@ -184,7 +185,7 @@ public class OfflineTraderTable
 						player.setSellingBuffs(true);
 					}
 
-					player.spawnMe(player.getX(), player.getY(), player.getZ());
+					player.spawnMe(player.Location.Location3D);
 					var items = ctx.CharacterOfflineTradeItems.Where(i => i.CharacterId == trade.CharacterId);
 					{
 						switch (type)

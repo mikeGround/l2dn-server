@@ -9,6 +9,8 @@ using L2Dn.GameServer.Model.Skills;
 using L2Dn.GameServer.Network.Enums;
 using L2Dn.GameServer.Network.OutgoingPackets;
 using L2Dn.GameServer.Utilities;
+using L2Dn.Geometry;
+using L2Dn.Model.Enums;
 using Microsoft.EntityFrameworkCore;
 using ThreadPool = L2Dn.GameServer.Utilities.ThreadPool;
 
@@ -540,7 +542,7 @@ public class Servitor : Summon, Runnable
 		sendPacket(new SetSummonRemainTimePacket(lifeTimeInMs, lifeTimeRemainingInMs));
 		
 		// Using same task to check if owner is in visible range
-		if (calculateDistance3D(getOwner()) > 2000)
+		if (this.Distance3D(getOwner()) > 2000)
 		{
 			getAI().setIntention(CtrlIntention.AI_INTENTION_FOLLOW, getOwner());
 		}

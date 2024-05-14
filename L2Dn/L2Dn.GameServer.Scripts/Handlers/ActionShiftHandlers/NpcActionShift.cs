@@ -13,6 +13,8 @@ using L2Dn.GameServer.Network.Enums;
 using L2Dn.GameServer.Network.OutgoingPackets;
 using L2Dn.GameServer.Scripts.Handlers.BypassHandlers;
 using L2Dn.GameServer.Utilities;
+using L2Dn.Geometry;
+using L2Dn.Model.Enums;
 
 namespace L2Dn.GameServer.Scripts.Handlers.ActionShiftHandlers;
 
@@ -72,8 +74,8 @@ public class NpcActionShift: IActionShiftHandler
 			htmlContent.Replace("%mpRewardTicks%", npc.getTemplate().getMpRewardTicks().ToString());
 			htmlContent.Replace("%mpRewardType%", npc.getTemplate().getMpRewardType().ToString());
 			htmlContent.Replace("%mpRewardAffectType%", npc.getTemplate().getMpRewardAffectType().ToString());
-			htmlContent.Replace("%loc2d%", ((int) player.calculateDistance2D(npc)).ToString());
-			htmlContent.Replace("%loc3d%", ((int) player.calculateDistance3D(npc)).ToString());
+			htmlContent.Replace("%loc2d%", ((int)player.Distance2D(npc)).ToString());
+			htmlContent.Replace("%loc3d%", ((int)player.Distance3D(npc)).ToString());
 			
 			AttributeType attackAttribute = npc.getAttackElement();
 			htmlContent.Replace("%ele_atk%", attackAttribute.ToString());
@@ -106,7 +108,10 @@ public class NpcActionShift: IActionShiftHandler
 					}
 					htmlContent.Replace("%spawnai%", "<font color=FF0000>" + template.getSpawnTemplate().getAI() + "</font>");
 				}
-				htmlContent.Replace("%spawn%", (template != null ? template.getSpawnLocation().getX() : npc.getSpawn().getX()) + " " + (template != null ? template.getSpawnLocation().getY() : npc.getSpawn().getY()) + " " + (template != null ? template.getSpawnLocation().getZ() : npc.getSpawn().getZ()));
+
+				Location spawnLocation = template?.getSpawnLocation() ?? npc.getSpawn().Location;
+				htmlContent.Replace("%spawn%", spawnLocation.X + " " + spawnLocation.Y + " " + spawnLocation.Z);
+
 				if (npc.getSpawn().getRespawnMinDelay() == TimeSpan.Zero)
 				{
 					htmlContent.Replace("%resp%", "None");

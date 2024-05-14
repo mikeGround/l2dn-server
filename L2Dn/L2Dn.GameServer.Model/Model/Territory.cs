@@ -1,4 +1,6 @@
 ﻿using L2Dn.GameServer.Utilities;
+using L2Dn.Geometry;
+using L2Dn.Utilities;
 using NLog;
 
 namespace L2Dn.GameServer.Model;
@@ -117,7 +119,7 @@ public class Territory
 		return (intersectCount % 2) == 1;
 	}
 	
-	public Location getRandomPoint()
+	public Location3D? getRandomPoint()
 	{
 		if (_procMax > 0)
 		{
@@ -128,7 +130,7 @@ public class Territory
 				pos += p1._proc;
 				if (rnd <= pos)
 				{
-					return new Location(p1._x, p1._y, Rnd.get(p1._zmin, p1._zmax));
+					return new Location3D(p1._x, p1._y, Rnd.get(p1._zmin, p1._zmax));
 				}
 			}
 		}
@@ -149,7 +151,7 @@ public class Territory
 						zmin = p1._zmin;
 					}
 				}
-				return new Location(x, y, Rnd.get(zmin, _zMax));
+				return new Location3D(x, y, Rnd.get(zmin, _zMax));
 			}
 		}
 

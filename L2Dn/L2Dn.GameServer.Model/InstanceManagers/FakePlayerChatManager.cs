@@ -10,6 +10,8 @@ using L2Dn.GameServer.Model.Actor;
 using L2Dn.GameServer.Model.Holders;
 using L2Dn.GameServer.Network.OutgoingPackets;
 using L2Dn.GameServer.Utilities;
+using L2Dn.Geometry;
+using L2Dn.Utilities;
 using NLog;
 using CollectionExtensions = L2Dn.GameServer.Utilities.CollectionExtensions;
 using ThreadPool = L2Dn.GameServer.Utilities.ThreadPool;
@@ -83,7 +85,7 @@ public class FakePlayerChatManager: DataReaderBase
 				Npc npc = spawn.getLastSpawn();
 				if (npc != null)
 				{
-					if (npc.calculateDistance2D(player) < 3000)
+					if (npc.Distance2D(player) < 3000)
 					{
 						if (GeoEngine.getInstance().canSeeTarget(npc, player) && !player.isInvisible())
 						{

@@ -8,6 +8,7 @@ using L2Dn.GameServer.Scripts.Handlers.ActionShiftHandlers;
 using L2Dn.GameServer.Scripts.Handlers.AdminCommandHandlers;
 using L2Dn.GameServer.Scripts.Handlers.BypassHandlers;
 using L2Dn.GameServer.Scripts.Handlers.ChatHandlers;
+using L2Dn.GameServer.Scripts.Handlers.CommunityBoard;
 using L2Dn.GameServer.Scripts.Handlers.ConditionHandlers;
 using L2Dn.GameServer.Scripts.Handlers.DailyMissionHandlers;
 using L2Dn.GameServer.Scripts.Handlers.EffectHandlers;
@@ -19,6 +20,7 @@ using L2Dn.GameServer.Scripts.Handlers.TargetHandlers;
 using L2Dn.GameServer.Scripts.Handlers.TargetHandlers.AffectObjects;
 using L2Dn.GameServer.Scripts.Handlers.TargetHandlers.AffectScopes;
 using L2Dn.GameServer.Scripts.Handlers.UserCommandHandlers;
+using L2Dn.GameServer.Scripts.Handlers.VoicedCommandHandlers;
 using L2Dn.GameServer.Scripts.Quests;
 using PlayerAction = L2Dn.GameServer.Scripts.Handlers.ActionHandlers.PlayerAction;
 using Range = L2Dn.GameServer.Scripts.Handlers.TargetHandlers.AffectScopes.Range;
@@ -777,7 +779,6 @@ public static class Scripts
 		userCommandHandler.registerHandler(new ClanPenalty());
 		userCommandHandler.registerHandler(new ClanWarsList());
 		userCommandHandler.registerHandler(new Dismount());
-		//userCommandHandler.registerHandler(new ExperienceGain());
 		userCommandHandler.registerHandler(new Unstuck());
 		userCommandHandler.registerHandler(new InstanceZone());
 		userCommandHandler.registerHandler(new Loc());
@@ -793,7 +794,38 @@ public static class Scripts
 		
 		// Voiced command handlers
 		VoicedCommandHandler voicedCommandHandler = VoicedCommandHandler.getInstance();
-		voicedCommandHandler.registerHandler(new ExperienceGain());
+        voicedCommandHandler.registerHandler(new ExperienceGain());
+        
+        if (Config.BANKING_SYSTEM_ENABLED)
+            voicedCommandHandler.registerHandler(new Banking());
+
+        if (Config.CHAT_ADMIN)
+            voicedCommandHandler.registerHandler(new ChatAdmin());
+
+        if (Config.MULTILANG_ENABLE && Config.MULTILANG_VOICED_ALLOW)
+            voicedCommandHandler.registerHandler(new Lang());
+
+        if (Config.ALLOW_CHANGE_PASSWORD)
+            voicedCommandHandler.registerHandler(new ChangePassword());
+
+        if (Config.ENABLE_OFFLINE_PLAY_COMMAND)
+            voicedCommandHandler.registerHandler(new OfflinePlay());
+
+        if (Config.ENABLE_OFFLINE_COMMAND && (Config.OFFLINE_TRADE_ENABLE || Config.OFFLINE_CRAFT_ENABLE))
+            voicedCommandHandler.registerHandler(new Offline());
+
+        if (Config.ENABLE_ONLINE_COMMAND)
+            voicedCommandHandler.registerHandler(new Online());
+
+        if (Config.PREMIUM_SYSTEM_ENABLED)
+            voicedCommandHandler.registerHandler(new Premium());
+
+        if (Config.AUTO_POTIONS_ENABLED)
+            voicedCommandHandler.registerHandler(new AutoPotion());
+
+        // TODO: Add configuration options for this voiced commands:
+        voicedCommandHandler.registerHandler(new CastleVCmd());
+        voicedCommandHandler.registerHandler(new SetVCmd());
 		
 		// Punishment handlers
 		PunishmentHandler punishmentHandler = PunishmentHandler.getInstance();
@@ -898,6 +930,18 @@ public static class Scripts
 		adminCommandHandler.registerHandler(new AdminTransform());
 		adminCommandHandler.registerHandler(new AdminVitality());
 		adminCommandHandler.registerHandler(new AdminZone());
+        
+        // Community board
+        CommunityBoardHandler communityBoardHandler = CommunityBoardHandler.getInstance();
+        communityBoardHandler.registerHandler(new ClanBoard());
+        communityBoardHandler.registerHandler(new FavoriteBoard());
+        communityBoardHandler.registerHandler(new FriendsBoard());
+        communityBoardHandler.registerHandler(new HomeBoard());
+        communityBoardHandler.registerHandler(new HomepageBoard());
+        communityBoardHandler.registerHandler(new MailBoard());
+        communityBoardHandler.registerHandler(new MemoBoard());
+        communityBoardHandler.registerHandler(new RegionBoard());
+        communityBoardHandler.registerHandler(new DropSearchBoard());
     }
 
     public static void RegisterQuests()

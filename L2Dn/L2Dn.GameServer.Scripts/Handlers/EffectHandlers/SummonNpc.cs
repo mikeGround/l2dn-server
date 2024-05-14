@@ -8,6 +8,8 @@ using L2Dn.GameServer.Model.Items.Instances;
 using L2Dn.GameServer.Model.Skills;
 using L2Dn.GameServer.Model.Skills.Targets;
 using L2Dn.GameServer.Utilities;
+using L2Dn.Geometry;
+using L2Dn.Utilities;
 
 namespace L2Dn.GameServer.Scripts.Handlers.EffectHandlers;
 
@@ -78,12 +80,12 @@ public class SummonNpc: AbstractEffect
 		
 		if (skill.getTargetType() == TargetType.GROUND)
 		{
-			Location wordPosition = player.getActingPlayer().getCurrentSkillWorldPosition();
+			Location3D? wordPosition = player.getActingPlayer().getCurrentSkillWorldPosition();
 			if (wordPosition != null)
 			{
-				x = wordPosition.getX();
-				y = wordPosition.getY();
-				z = wordPosition.getZ();
+				x = wordPosition.Value.X;
+				y = wordPosition.Value.Y;
+				z = wordPosition.Value.Z;
 			}
 		}
 		else
@@ -121,7 +123,7 @@ public class SummonNpc: AbstractEffect
 				decoy.setHeading(player.getHeading());
 				decoy.setInstance(player.getInstanceWorld());
 				decoy.setSummoner(player);
-				decoy.spawnMe(x, y, z);
+				decoy.spawnMe(new Location3D(x, y, z));
 				break;
 			}
 			case "EffectPoint":
@@ -132,7 +134,7 @@ public class SummonNpc: AbstractEffect
 				effectPoint.setInvul(true);
 				effectPoint.setSummoner(player);
 				effectPoint.setTitle(player.getName());
-				effectPoint.spawnMe(x, y, z);
+				effectPoint.spawnMe(new Location3D(x, y, z));
 				// First consider NPC template despawn_time parameter.
 				long despawnTime = (long) (effectPoint.getParameters().getFloat("despawn_time", 0) * 1000);
 				if (despawnTime > 0)
@@ -157,11 +159,10 @@ public class SummonNpc: AbstractEffect
 					LOGGER.Warn(GetType().Name + ": Unable to create spawn. " + e);
 					return;
 				}
-				
-				spawn.setXYZ(x, y, z);
-				spawn.setHeading(player.getHeading());
+
+				spawn.Location = new Location(x, y, z, player.getHeading());
 				spawn.stopRespawn();
-				
+
 				Npc npc = spawn.doSpawn(_isSummonSpawn);
 				player.addSummonedNpc(npc); // npc.setSummoner(player);
 				npc.setName(npcTemplate.getName());

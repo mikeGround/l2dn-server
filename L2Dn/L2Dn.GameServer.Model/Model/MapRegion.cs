@@ -1,6 +1,7 @@
-﻿using L2Dn.GameServer.Enums;
-using L2Dn.GameServer.Utilities;
+﻿using L2Dn.GameServer.Utilities;
+using L2Dn.Geometry;
 using L2Dn.Model.Enums;
+using L2Dn.Utilities;
 
 namespace L2Dn.GameServer.Model;
 
@@ -12,10 +13,10 @@ public class MapRegion
 	private readonly int _bbs;
 	private List<int[]> _maps;
 	
-	private List<Location> _spawnLocs;
-	private List<Location> _otherSpawnLocs;
-	private List<Location> _chaoticSpawnLocs;
-	private List<Location> _banishSpawnLocs;
+	private List<Location3D> _spawnLocs;
+	private List<Location3D> _otherSpawnLocs;
+	private List<Location3D> _chaoticSpawnLocs;
+	private List<Location3D> _banishSpawnLocs;
 	
 	private readonly Map<Race, string> _bannedRace = new();
 	
@@ -91,7 +92,7 @@ public class MapRegion
 			_spawnLocs = new();
 		}
 		
-		_spawnLocs.Add(new Location(x, y, z));
+		_spawnLocs.Add(new Location3D(x, y, z));
 	}
 	
 	public void addOtherSpawn(int x, int y, int z)
@@ -101,7 +102,7 @@ public class MapRegion
 			_otherSpawnLocs = new();
 		}
 		
-		_otherSpawnLocs.Add(new Location(x, y, z));
+		_otherSpawnLocs.Add(new Location3D(x, y, z));
 	}
 	
 	public void addChaoticSpawn(int x, int y, int z)
@@ -111,7 +112,7 @@ public class MapRegion
 			_chaoticSpawnLocs = new();
 		}
 		
-		_chaoticSpawnLocs.Add(new Location(x, y, z));
+		_chaoticSpawnLocs.Add(new Location3D(x, y, z));
 	}
 	
 	public void addBanishSpawn(int x, int y, int z)
@@ -121,15 +122,15 @@ public class MapRegion
 			_banishSpawnLocs = new();
 		}
 		
-		_banishSpawnLocs.Add(new Location(x, y, z));
+		_banishSpawnLocs.Add(new Location3D(x, y, z));
 	}
 	
-	public List<Location> getSpawns()
+	public List<Location3D> getSpawns()
 	{
 		return _spawnLocs;
 	}
 	
-	public Location getSpawnLoc()
+	public Location3D getSpawnLoc()
 	{
 		if (Config.RANDOM_RESPAWN_IN_TOWN_ENABLED)
 		{
@@ -138,7 +139,7 @@ public class MapRegion
 		return _spawnLocs[0];
 	}
 	
-	public Location getOtherSpawnLoc()
+	public Location3D getOtherSpawnLoc()
 	{
 		if (_otherSpawnLocs != null)
 		{
@@ -151,7 +152,7 @@ public class MapRegion
 		return getSpawnLoc();
 	}
 	
-	public Location getChaoticSpawnLoc()
+	public Location3D getChaoticSpawnLoc()
 	{
 		if (_chaoticSpawnLocs != null)
 		{
@@ -164,7 +165,7 @@ public class MapRegion
 		return getSpawnLoc();
 	}
 	
-	public Location getBanishSpawnLoc()
+	public Location3D getBanishSpawnLoc()
 	{
 		if (_banishSpawnLocs != null)
 		{

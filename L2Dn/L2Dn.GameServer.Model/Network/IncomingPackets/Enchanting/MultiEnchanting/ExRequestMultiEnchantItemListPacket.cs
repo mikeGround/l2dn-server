@@ -12,6 +12,7 @@ using L2Dn.GameServer.Network.OutgoingPackets.Enchanting;
 using L2Dn.GameServer.Utilities;
 using L2Dn.Network;
 using L2Dn.Packets;
+using L2Dn.Utilities;
 using NLog;
 
 namespace L2Dn.GameServer.Network.IncomingPackets.Enchanting.MultiEnchanting;
@@ -59,7 +60,7 @@ public struct ExRequestMultiEnchantItemListPacket: IIncomingPacket<GameSession>
 			return ValueTask.CompletedTask;
 		}
 		
-		EnchantScroll scrollTemplate = EnchantItemData.getInstance().getEnchantScroll(scroll);
+		EnchantScroll? scrollTemplate = EnchantItemData.getInstance().getEnchantScroll(scroll.getId());
 		if (scrollTemplate == null)
 			return ValueTask.CompletedTask;
 		

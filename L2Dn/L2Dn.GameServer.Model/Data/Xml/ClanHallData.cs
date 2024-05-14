@@ -8,6 +8,7 @@ using L2Dn.GameServer.Model.Holders;
 using L2Dn.GameServer.Model.Residences;
 using L2Dn.GameServer.Network.Enums;
 using L2Dn.GameServer.Utilities;
+using L2Dn.Geometry;
 using L2Dn.Model.DataPack;
 using L2Dn.Model.Enums;
 using NLog;
@@ -73,8 +74,8 @@ public class ClanHallData: DataReaderBase
 			return null;
 		}
 		
-		Location ownerRestartPointLoc = new(ownerRestartPoint.X, ownerRestartPoint.Y, ownerRestartPoint.Z);
-		Location banishPointLoc = new(banishPoint.X, banishPoint.Y, banishPoint.Z);
+		Location3D ownerRestartPointLoc = new(ownerRestartPoint.X, ownerRestartPoint.Y, ownerRestartPoint.Z);
+		Location3D banishPointLoc = new(banishPoint.X, banishPoint.Y, banishPoint.Z);
 
 		ClanHall clanHall = new(xmlClanHall.Id, name, grade, type, auction.MinBid, auction.Lease, auction.Deposit,
 			ownerRestartPointLoc, banishPointLoc);
@@ -93,8 +94,8 @@ public class ClanHallData: DataReaderBase
 
 		foreach (XmlClanHallTeleport teleport in xmlClanHall.TeleportList)
 		{
-			clanHall.getTeleportList().add(new ClanHallTeleportHolder((NpcStringId)teleport.NpcStringId, teleport.X,
-				teleport.Y, teleport.Z, teleport.MinFunctionLevel, teleport.Cost));
+			clanHall.getTeleportList().add(new ClanHallTeleportHolder((NpcStringId)teleport.NpcStringId, new Location3D(
+				teleport.X, teleport.Y, teleport.Z), teleport.MinFunctionLevel, teleport.Cost));
 		}
 
 		return clanHall;

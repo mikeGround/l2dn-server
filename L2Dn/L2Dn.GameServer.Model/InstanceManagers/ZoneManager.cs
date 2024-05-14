@@ -11,6 +11,7 @@ using L2Dn.GameServer.Model.Zones;
 using L2Dn.GameServer.Model.Zones.Forms;
 using L2Dn.GameServer.Model.Zones.Types;
 using L2Dn.GameServer.Utilities;
+using L2Dn.Geometry;
 using L2Dn.Model.DataPack;
 using NLog;
 
@@ -170,25 +171,25 @@ public class ZoneManager: DataReaderBase
 		int minZ = zone.MinZ;
 		int maxZ = zone.MaxZ;
 		string zoneShape = zone.Shape;
-						
+
 		// Get the zone shape from xml
 		ZoneForm zoneForm;
 		try
 		{
-			Point2D[] coords = zone.Nodes.Select(node => new Point2D(node.X, node.Y)).ToArray();
+			Location2D[] coords = zone.Nodes.Select(node => new Location2D(node.X, node.Y)).ToArray();
 			if (coords.Length == 0)
 			{
 				_logger.Error(GetType().Name + ": ZoneData: missing data for zone: " + zoneId + " XML file: " + filePath);
 				return;
 			}
-			
+
 			// Create this zone. Parsing for cuboids is a bit different than for other polygons cuboids need exactly 2 points to be defined.
 			// Other polygons need at least 3 (one per vertex)
 			if (string.Equals(zoneShape, "Cuboid", StringComparison.OrdinalIgnoreCase))
 			{
 				if (coords.Length == 2)
 				{
-					zoneForm = new ZoneCuboid(coords[0].getX(), coords[1].getX(), coords[0].getY(), coords[1].getY(), minZ, maxZ);
+					zoneForm = new ZoneCuboid(coords[0].X, coords[1].X, coords[0].Y, coords[1].Y, minZ, maxZ);
 				}
 				else
 				{
@@ -205,8 +206,8 @@ public class ZoneManager: DataReaderBase
 					int[] aY = new int[coords.Length];
 					for (int i = 0; i < coords.Length; i++)
 					{
-						aX[i] = coords[i].getX();
-						aY[i] = coords[i].getY();
+						aX[i] = coords[i].X;
+						aY[i] = coords[i].Y;
 					}
 					zoneForm = new ZoneNPoly(aX, aY, minZ, maxZ);
 				}
@@ -223,7 +224,7 @@ public class ZoneManager: DataReaderBase
 				int zoneRad = zone.Radius;
 				if (coords.Length == 1 && zoneRad > 0)
 				{
-					zoneForm = new ZoneCylinder(coords[0].getX(), coords[0].getY(), minZ, maxZ, zoneRad);
+					zoneForm = new ZoneCylinder(coords[0].X, coords[0].Y, minZ, maxZ, zoneRad);
 				}
 				else
 				{
@@ -265,7 +266,7 @@ public class ZoneManager: DataReaderBase
 
 		if (zoneType is ZoneRespawn zoneRespawn)
 		{
-			zone.Spawns.ForEach(spawn => zoneRespawn.parseLoc(spawn.X, spawn.Y, spawn.Z, spawn.Type));
+			zone.Spawns.ForEach(spawn => zoneRespawn.parseLoc(new Location3D(spawn.X, spawn.Y, spawn.Z), spawn.Type));
 		}
 
 		if (zoneType is RespawnZone respawnZone)
@@ -344,7 +345,7 @@ public class ZoneManager: DataReaderBase
 	{
 		if (!_classZones.TryGetValue(typeof(T), out Map<int, ZoneType>? map))
 			return ImmutableArray<T>.Empty;
-			
+
 		return map.Values.Cast<T>().ToImmutableArray();
 	}
 	
@@ -410,66 +411,44 @@ public class ZoneManager: DataReaderBase
 	 * @param locational the locational
 	 * @return zones
 	 */
-	public List<ZoneType> getZones(ILocational locational)
+	public List<ZoneType> getZones(Location3D location)
 	{
-		return getZones(locational.getX(), locational.getY(), locational.getZ());
+		List<ZoneType> temp = new();
+		ZoneRegion? region = getRegion(location.Location2D);
+		if (region != null)
+		{
+			foreach (ZoneType zone in region.getZones().Values)
+			{
+				if (zone.isInsideZone(location))
+					temp.add(zone);
+			}
+		}
+
+		return temp;
 	}
-	
-	/**
-	 * Gets the zone.
-	 * @param <T> the generic type
-	 * @param locational the locational
-	 * @param type the type
-	 * @return zone from where the object is located by type
-	 */
-	public T getZone<T>(ILocational locational)
-		where T: ZoneType
-	{
-		if (locational == null)
-			return null;
-		
-		return getZone<T>(locational.getX(), locational.getY(), locational.getZ());
-	}
-	
+
 	/**
 	 * Returns all zones from given coordinates (plane).
 	 * @param x the x
 	 * @param y the y
 	 * @return zones
 	 */
-	public List<ZoneType> getZones(int x, int y)
+	public List<ZoneType> getZones(Location2D location)
 	{
 		List<ZoneType> temp = new();
-		foreach (ZoneType zone in getRegion(x, y).getZones().values())
+		ZoneRegion? region = getRegion(location);
+		if (region != null)
 		{
-			if (zone.isInsideZone(x, y))
+			foreach (ZoneType zone in region.getZones().Values)
 			{
-				temp.add(zone);
+				if (zone.isInsideZone(location))
+					temp.add(zone);
 			}
 		}
+
 		return temp;
 	}
-	
-	/**
-	 * Returns all zones from given coordinates.
-	 * @param x the x
-	 * @param y the y
-	 * @param z the z
-	 * @return zones
-	 */
-	public List<ZoneType> getZones(int x, int y, int z)
-	{
-		List<ZoneType> temp = new();
-		foreach (ZoneType zone in getRegion(x, y).getZones().values())
-		{
-			if (zone.isInsideZone(x, y, z))
-			{
-				temp.add(zone);
-			}
-		}
-		return temp;
-	}
-	
+
 	/**
 	 * Gets the zone.
 	 * @param <T> the generic type
@@ -479,19 +458,47 @@ public class ZoneManager: DataReaderBase
 	 * @param type the type
 	 * @return zone from given coordinates
 	 */
-	public T getZone<T>(int x, int y, int z)
-		where T: ZoneType	
+	public T? getZone<T>(Location3D location)
+		where T: ZoneType
 	{
-		foreach (ZoneType zone in getRegion(x, y).getZones().values())
+		ZoneRegion? region = getRegion(location.Location2D);
+		if (region != null)
 		{
-			if (zone.isInsideZone(x, y, z) && zone is T)
+			foreach (ZoneType zone in region.getZones().Values)
 			{
-				return (T) zone;
+				if (zone.isInsideZone(location) && zone is T zoneType)
+					return zoneType;
 			}
 		}
+
 		return null;
 	}
-	
+
+	/**
+	 * Gets the zone.
+	 * @param <T> the generic type
+	 * @param x the x
+	 * @param y the y
+	 * @param z the z
+	 * @param type the type
+	 * @return zone from given coordinates
+	 */
+	public T? getZone<T>(Location2D location)
+		where T: ZoneType
+	{
+		ZoneRegion? region = getRegion(location);
+		if (region != null)
+		{
+			foreach (ZoneType zone in region.getZones().Values)
+			{
+				if (zone.isInsideZone(location) && zone is T zoneType)
+					return zoneType;
+			}
+		}
+
+		return null;
+	}
+
 	/**
 	 * Get spawm territory by name
 	 * @param name name of territory to search
@@ -525,20 +532,17 @@ public class ZoneManager: DataReaderBase
 	 * @param creature the creature
 	 * @return the olympiad stadium
 	 */
-	public OlympiadStadiumZone getOlympiadStadium(Creature creature)
+	public OlympiadStadiumZone? getOlympiadStadium(Creature creature)
 	{
 		if (creature == null)
-		{
 			return null;
-		}
-		
-		foreach (ZoneType temp in getInstance().getZones(creature.getX(), creature.getY(), creature.getZ()))
+
+		foreach (ZoneType temp in getInstance().getZones(new Location3D(creature.getX(), creature.getY(), creature.getZ())))
 		{
-			if (temp is OlympiadStadiumZone && temp.isCharacterInZone(creature))
-			{
-				return (OlympiadStadiumZone) temp;
-			}
+			if (temp is OlympiadStadiumZone zone && zone.isCharacterInZone(creature))
+				return zone;
 		}
+
 		return null;
 	}
 	
@@ -573,25 +577,21 @@ public class ZoneManager: DataReaderBase
 			_debugItems.Clear();
 		}
 	}
-	
-	public ZoneRegion getRegion(int x, int y)
+
+	public ZoneRegion? getRegion(Location2D location)
 	{
-		try
-		{
-			return _zoneRegions[(x >> ShiftBy) + OffsetX][(y >> ShiftBy) + OffsetY];
-		}
-		catch (IndexOutOfRangeException e)
-		{
-			// LOGGER.Warn(GetType().Name + ": Incorrect zone region X: " + ((x >> SHIFT_BY) + OFFSET_X) + " Y: " + ((y >> SHIFT_BY) + OFFSET_Y) + " for coordinates x: " + x + " y: " + y);
+		int index = (location.X >> ShiftBy) + OffsetX;
+		if (index < 0 || index >= _zoneRegions.Length)
 			return null;
-		}
+
+		ZoneRegion[] regions = _zoneRegions[index];
+		index = (location.Y >> ShiftBy) + OffsetY;
+		if (index < 0 || index >= regions.Length)
+			return null;
+
+		return regions[index];
 	}
-	
-	public ZoneRegion getRegion(ILocational point)
-	{
-		return getRegion(point.getX(), point.getY());
-	}
-	
+
 	/**
 	 * Gets the settings.
 	 * @param name the name

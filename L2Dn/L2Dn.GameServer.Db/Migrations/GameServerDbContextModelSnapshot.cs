@@ -1515,6 +1515,35 @@ namespace L2Dn.GameServer.Db.Migrations
                     b.ToTable("AirShips");
                 });
 
+            modelBuilder.Entity("L2Dn.GameServer.Db.DbBbsFavorite", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ByPass")
+                        .IsRequired()
+                        .HasMaxLength(127)
+                        .HasColumnType("character varying(127)");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("PlayerId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("BbsFavorites");
+                });
+
             modelBuilder.Entity("L2Dn.GameServer.Db.DbBuyList", b =>
                 {
                     b.Property<int>("BuyListId")

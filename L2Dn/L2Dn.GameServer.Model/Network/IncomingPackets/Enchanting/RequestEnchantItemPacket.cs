@@ -15,6 +15,7 @@ using L2Dn.GameServer.Network.OutgoingPackets.Enchanting;
 using L2Dn.GameServer.Utilities;
 using L2Dn.Network;
 using L2Dn.Packets;
+using L2Dn.Utilities;
 using NLog;
 
 namespace L2Dn.GameServer.Network.IncomingPackets.Enchanting;
@@ -67,15 +68,15 @@ public struct RequestEnchantItemPacket: IIncomingPacket<GameSession>
 		}
 		
 		// Template for scroll.
-		EnchantScroll scrollTemplate = EnchantItemData.getInstance().getEnchantScroll(scroll);
+		EnchantScroll? scrollTemplate = EnchantItemData.getInstance().getEnchantScroll(scroll.getId());
 		if (scrollTemplate == null)
 			return ValueTask.CompletedTask;
 		
-		// Template for support item, if exist.
-		EnchantSupportItem supportTemplate = null;
+		// Template for support item, if exists.
+		EnchantSupportItem? supportTemplate = null;
 		if (support != null)
 		{
-			supportTemplate = EnchantItemData.getInstance().getSupportItem(support);
+			supportTemplate = EnchantItemData.getInstance().getSupportItem(support.getId());
 			if (supportTemplate == null)
 			{
 				player.removeRequest<EnchantItemRequest>();
@@ -139,7 +140,7 @@ public struct RequestEnchantItemPacket: IIncomingPacket<GameSession>
 			int challengePointsOptionIndex = -1;
 			if (info != null)
 			{
-				int groupId = info.groupId;
+				int groupId = info.GroupId;
 				if (groupId == player.getChallengeInfo().getChallengePointsPendingRecharge()[0])
 				{
 					challengePointsGroupId = player.getChallengeInfo().getChallengePointsPendingRecharge()[0];
@@ -186,10 +187,10 @@ public struct RequestEnchantItemPacket: IIncomingPacket<GameSession>
 						else
 						{
 							int enchantValue = 1;
-							if ((challengePointsGroupId > 0) && (challengePointsOptionIndex == EnchantChallengePointData.OPTION_OVER_UP_PROB))
+							if ((challengePointsGroupId > 0) && (challengePointsOptionIndex == EnchantChallengePointData.OptionOverUpProb))
 							{
 								EnchantChallengePointData.EnchantChallengePointsOptionInfo optionInfo = EnchantChallengePointData.getInstance().getOptionInfo(challengePointsGroupId, challengePointsOptionIndex);
-								if ((optionInfo != null) && (item.getEnchantLevel() >= optionInfo.minEnchant) && (item.getEnchantLevel() <= optionInfo.maxEnchant) && (Rnd.get(100) < optionInfo.chance))
+								if ((optionInfo != null) && (item.getEnchantLevel() >= optionInfo.MinEnchant) && (item.getEnchantLevel() <= optionInfo.MaxEnchant) && (Rnd.get(100) < optionInfo.Chance))
 								{
 									enchantValue = 2;
 								}
@@ -317,10 +318,10 @@ public struct RequestEnchantItemPacket: IIncomingPacket<GameSession>
 				case EnchantResultType.FAILURE:
 				{
 					bool challengePointsSafe = false;
-					if ((challengePointsGroupId > 0) && (challengePointsOptionIndex == EnchantChallengePointData.OPTION_NUM_PROTECT_PROB))
+					if ((challengePointsGroupId > 0) && (challengePointsOptionIndex == EnchantChallengePointData.OptionNumProtectProb))
 					{
 						EnchantChallengePointData.EnchantChallengePointsOptionInfo optionInfo = EnchantChallengePointData.getInstance().getOptionInfo(challengePointsGroupId, challengePointsOptionIndex);
-						if ((optionInfo != null) && (item.getEnchantLevel() >= optionInfo.minEnchant) && (item.getEnchantLevel() <= optionInfo.maxEnchant) && (Rnd.get(100) < optionInfo.chance))
+						if ((optionInfo != null) && (item.getEnchantLevel() >= optionInfo.MinEnchant) && (item.getEnchantLevel() <= optionInfo.MaxEnchant) && (Rnd.get(100) < optionInfo.Chance))
 						{
 							challengePointsSafe = true;
 						}
@@ -415,18 +416,18 @@ public struct RequestEnchantItemPacket: IIncomingPacket<GameSession>
 						bool challengePointsBlessedDown = false;
 						if (challengePointsGroupId > 0)
 						{
-							if (challengePointsOptionIndex == EnchantChallengePointData.OPTION_NUM_RESET_PROB)
+							if (challengePointsOptionIndex == EnchantChallengePointData.OptionNumResetProb)
 							{
 								EnchantChallengePointData.EnchantChallengePointsOptionInfo optionInfo = EnchantChallengePointData.getInstance().getOptionInfo(challengePointsGroupId, challengePointsOptionIndex);
-								if ((optionInfo != null) && (item.getEnchantLevel() >= optionInfo.minEnchant) && (item.getEnchantLevel() <= optionInfo.maxEnchant) && (Rnd.get(100) < optionInfo.chance))
+								if ((optionInfo != null) && (item.getEnchantLevel() >= optionInfo.MinEnchant) && (item.getEnchantLevel() <= optionInfo.MaxEnchant) && (Rnd.get(100) < optionInfo.Chance))
 								{
 									challengePointsBlessed = true;
 								}
 							}
-							else if (challengePointsOptionIndex == EnchantChallengePointData.OPTION_NUM_DOWN_PROB)
+							else if (challengePointsOptionIndex == EnchantChallengePointData.OptionNumDownProb)
 							{
 								EnchantChallengePointData.EnchantChallengePointsOptionInfo optionInfo = EnchantChallengePointData.getInstance().getOptionInfo(challengePointsGroupId, challengePointsOptionIndex);
-								if ((optionInfo != null) && (item.getEnchantLevel() >= optionInfo.minEnchant) && (item.getEnchantLevel() <= optionInfo.maxEnchant) && (Rnd.get(100) < optionInfo.chance))
+								if ((optionInfo != null) && (item.getEnchantLevel() >= optionInfo.MinEnchant) && (item.getEnchantLevel() <= optionInfo.MaxEnchant) && (Rnd.get(100) < optionInfo.Chance))
 								{
 									challengePointsBlessedDown = true;
 								}

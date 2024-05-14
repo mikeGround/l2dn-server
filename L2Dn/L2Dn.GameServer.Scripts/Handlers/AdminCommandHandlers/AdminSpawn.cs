@@ -12,6 +12,7 @@ using L2Dn.GameServer.Model.InstanceZones;
 using L2Dn.GameServer.Network.Enums;
 using L2Dn.GameServer.Network.OutgoingPackets;
 using L2Dn.GameServer.Utilities;
+using L2Dn.Geometry;
 using NLog;
 
 namespace L2Dn.GameServer.Scripts.Handlers.AdminCommandHandlers;
@@ -191,15 +192,15 @@ public class AdminSpawn: IAdminCommandHandler
 			// Unload all zones.
 			ZoneManager.getInstance().unload();
 			// Delete all spawns.
-			foreach (Npc npc in DBSpawnManager.getInstance().getNpcs().values())
+			foreach (Npc npc in DbSpawnManager.getInstance().getNpcs())
 			{
 				if (npc != null)
 				{
-					DBSpawnManager.getInstance().deleteSpawn(npc.getSpawn(), true);
+					DbSpawnManager.getInstance().deleteSpawn(npc.getSpawn(), true);
 					npc.deleteMe();
 				}
 			}
-			DBSpawnManager.getInstance().cleanUp();
+			DbSpawnManager.getInstance().cleanUp();
 			foreach (WorldObject obj in World.getInstance().getVisibleObjects())
 			{
 				if ((obj != null) && obj.isNpc())
@@ -226,15 +227,15 @@ public class AdminSpawn: IAdminCommandHandler
 			// Unload all zones.
 			ZoneManager.getInstance().unload();
 			// Delete all spawns.
-			foreach (Npc npc in DBSpawnManager.getInstance().getNpcs().values())
+			foreach (Npc npc in DbSpawnManager.getInstance().getNpcs())
 			{
 				if (npc != null)
 				{
-					DBSpawnManager.getInstance().deleteSpawn(npc.getSpawn(), true);
+					DbSpawnManager.getInstance().deleteSpawn(npc.getSpawn(), true);
 					npc.deleteMe();
 				}
 			}
-			DBSpawnManager.getInstance().cleanUp();
+			DbSpawnManager.getInstance().cleanUp();
 			foreach (WorldObject obj in World.getInstance().getVisibleObjects())
 			{
 				if ((obj != null) && obj.isNpc())
@@ -251,7 +252,7 @@ public class AdminSpawn: IAdminCommandHandler
 			}
 			// Reload.
 			SpawnData.getInstance().init();
-			DBSpawnManager.getInstance().load();
+			DbSpawnManager.getInstance().load();
 			ZoneManager.getInstance().reload();
 			QuestManager.getInstance().reloadAllScripts();
 			AdminData.getInstance().broadcastMessageToGMs("NPC respawn completed!");
@@ -488,11 +489,11 @@ public class AdminSpawn: IAdminCommandHandler
 				{
 					if (showposition && (npc != null))
 					{
-						activeChar.teleToLocation(npc.getLocation(), true);
+						activeChar.teleToLocation(npc.Location, true);
 					}
 					else
 					{
-						activeChar.teleToLocation(spawn.getLocation(), true);
+						activeChar.teleToLocation(spawn.Location, true);
 					}
 				}
 			}
@@ -502,7 +503,8 @@ public class AdminSpawn: IAdminCommandHandler
 			}
 			else
 			{
-				activeChar.sendMessage(index + " - " + spawn.getTemplate().getName() + " (" + spawn + "): " + spawn.getX() + " " + spawn.getY() + " " + spawn.getZ());
+				activeChar.sendMessage(index + " - " + spawn.getTemplate().getName() + " (" + spawn + "): " +
+					spawn.Location.X + " " + spawn.Location.Y + " " + spawn.Location.Z);
 			}
 		}
 		
@@ -515,10 +517,10 @@ public class AdminSpawn: IAdminCommandHandler
 	private void printSpawn(Npc target, int type)
 	{
 		int i = target.getId();
-		int x = target.getSpawn().getX();
-		int y = target.getSpawn().getY();
-		int z = target.getSpawn().getZ();
-		int h = target.getSpawn().getHeading();
+		int x = target.getSpawn().Location.X;
+		int y = target.getSpawn().Location.Y;
+		int z = target.getSpawn().Location.Z;
+		int h = target.getSpawn().Location.Heading;
 		switch (type)
 		{
 			default:
@@ -572,9 +574,8 @@ public class AdminSpawn: IAdminCommandHandler
 		try
 		{
 			Spawn spawn = new Spawn(template1);
-			spawn.setXYZ(target);
+			spawn.Location = target.Location;
 			spawn.setAmount(mobCount);
-			spawn.setHeading(activeChar.getHeading());
 			spawn.setRespawnDelay(TimeSpan.FromSeconds(respawnTime));
 			
 			bool permanent = permanentValue;
@@ -619,9 +620,8 @@ public class AdminSpawn: IAdminCommandHandler
 		try
 		{
 			Spawn spawn = new Spawn(template1);
-			spawn.setXYZ(x, y, z);
+			spawn.Location = new Location(x, y, z, h);
 			spawn.setAmount(1);
-			spawn.setHeading(h);
 			spawn.setRespawnDelay(TimeSpan.FromSeconds(60));
 			if (activeChar.isInInstance())
 			{

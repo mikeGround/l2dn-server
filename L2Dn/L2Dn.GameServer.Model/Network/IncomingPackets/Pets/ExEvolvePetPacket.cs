@@ -8,6 +8,7 @@ using L2Dn.GameServer.Model.Items.Instances;
 using L2Dn.GameServer.Utilities;
 using L2Dn.Network;
 using L2Dn.Packets;
+using L2Dn.Utilities;
 
 namespace L2Dn.GameServer.Network.IncomingPackets.Pets;
 
@@ -79,7 +80,7 @@ public struct ExEvolvePetPacket: IIncomingPacket<GameSession>
 		evolved.setRunning();
 		evolved.storeEvolvedPets((int)evolveLevel, evolved.getPetData().getIndex(), controlItem.getObjectId());
 		controlItem.setEnchantLevel(evolved.getLevel());
-		evolved.spawnMe(pet.getX(), pet.getY(), pet.getZ());
+		evolved.spawnMe(pet.Location.Location3D);
 		evolved.startFeed();
 	}
 }

@@ -7,6 +7,8 @@ using L2Dn.GameServer.Model.Zones;
 using L2Dn.GameServer.Network.Enums;
 using L2Dn.GameServer.Network.OutgoingPackets;
 using L2Dn.GameServer.Utilities;
+using L2Dn.Geometry;
+using L2Dn.Utilities;
 
 namespace L2Dn.GameServer.Scripts.Handlers.ItemHandlers;
 
@@ -36,16 +38,16 @@ public class RollingDice: IItemHandler
 		}
 		
 		// Mobius: Retail dice position land calculation.
-		double angle = Util.convertHeadingToDegree(player.getHeading());
-		double radian = MathUtil.toRadians(angle);
-		double course = MathUtil.toRadians(180);
+		double angle = HeadingUtil.ConvertHeadingToDegrees(player.getHeading());
+		double radian = double.DegreesToRadians(angle);
+		double course = double.DegreesToRadians(180);
 		int x1 = (int) (Math.Cos(Math.PI + radian + course) * 40);
 		int y1 = (int) (Math.Sin(Math.PI + radian + course) * 40);
 		int x = player.getX() + x1;
 		int y = player.getY() + y1;
 		int z = player.getZ();
-		Location destination = GeoEngine.getInstance().getValidLocation(player.getX(), player.getY(), player.getZ(), x, y, z, player.getInstanceWorld());
-		Broadcast.toSelfAndKnownPlayers(player, new DicePacket(player.getObjectId(), itemId, number, destination.getX(), destination.getY(), destination.getZ()));
+		Location3D destination = GeoEngine.getInstance().getValidLocation(player.Location.Location3D, new Location3D(x, y, z), player.getInstanceWorld());
+		Broadcast.toSelfAndKnownPlayers(player, new DicePacket(player.getObjectId(), itemId, number, destination));
 		
 		SystemMessagePacket sm = new SystemMessagePacket(SystemMessageId.C1_HAS_ROLLED_A_S2);
 		sm.Params.addString(player.getName());

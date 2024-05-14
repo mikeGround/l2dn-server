@@ -38,7 +38,9 @@ using L2Dn.GameServer.Network.Enums;
 using L2Dn.GameServer.Network.OutgoingPackets;
 using L2Dn.GameServer.TaskManagers;
 using L2Dn.GameServer.Utilities;
+using L2Dn.Geometry;
 using L2Dn.Model.Enums;
+using L2Dn.Utilities;
 using NLog;
 
 namespace L2Dn.GameServer.Model.Events;
@@ -1485,9 +1487,9 @@ public abstract class AbstractScript: IEventTimerEvent<string>, IEventTimerCance
 	 * @see #addSpawn(int, IPositionable, bool, long, bool, int)
 	 * @see #addSpawn(int, int, int, int, int, bool, long, bool, int)
 	 */
-	public static Npc addSpawn(int npcId, IPositionable pos)
+	public static Npc addSpawn(int npcId, Location location)
 	{
-		return addSpawn(npcId, pos.getX(), pos.getY(), pos.getZ(), pos.getHeading(), false, TimeSpan.Zero, false, 0);
+		return addSpawn(npcId, location.X, location.Y, location.Z, location.Heading, false, TimeSpan.Zero, false, 0);
 	}
 	
 	/**
@@ -1499,9 +1501,9 @@ public abstract class AbstractScript: IEventTimerEvent<string>, IEventTimerCance
 	 * @param despawnDelay time in milliseconds till the NPC is despawned (0 - only despawned on server shutdown)
 	 * @return the {@link Npc} object of the newly spawned NPC, {@code null} if the NPC doesn't exist
 	 */
-	public static Npc addSpawn(Npc summoner, int npcId, IPositionable pos, bool randomOffset, TimeSpan despawnDelay)
+	public static Npc addSpawn(Npc summoner, int npcId, Location3D location, int heading, bool randomOffset, TimeSpan despawnDelay)
 	{
-		return addSpawn(summoner, npcId, pos.getX(), pos.getY(), pos.getZ(), pos.getHeading(), randomOffset, despawnDelay, false, 0);
+		return addSpawn(summoner, npcId, location.X, location.Y, location.Z, heading, randomOffset, despawnDelay, false, 0);
 	}
 	
 	/**
@@ -1513,9 +1515,9 @@ public abstract class AbstractScript: IEventTimerEvent<string>, IEventTimerCance
 	 * @see #addSpawn(int, IPositionable, bool, long, bool, int)
 	 * @see #addSpawn(int, int, int, int, int, bool, long, bool, int)
 	 */
-	public static Npc addSpawn(int npcId, IPositionable pos, bool isSummonSpawn)
+	public static Npc addSpawn(int npcId, Location location, bool isSummonSpawn)
 	{
-		return addSpawn(npcId, pos.getX(), pos.getY(), pos.getZ(), pos.getHeading(), false, TimeSpan.Zero, isSummonSpawn, 0);
+		return addSpawn(npcId, location.X, location.Y, location.Z, location.Heading, false, TimeSpan.Zero, isSummonSpawn, 0);
 	}
 	
 	/**
@@ -1528,9 +1530,9 @@ public abstract class AbstractScript: IEventTimerEvent<string>, IEventTimerCance
 	 * @see #addSpawn(int, IPositionable, bool, long, bool, int)
 	 * @see #addSpawn(int, int, int, int, int, bool, long, bool, int)
 	 */
-	public static Npc addSpawn(int npcId, IPositionable pos, bool randomOffset, TimeSpan despawnDelay)
+	public static Npc addSpawn(int npcId, Location location, bool randomOffset, TimeSpan despawnDelay)
 	{
-		return addSpawn(npcId, pos.getX(), pos.getY(), pos.getZ(), pos.getHeading(), randomOffset, despawnDelay, false, 0);
+		return addSpawn(npcId, location.X, location.Y, location.Z, location.Heading, randomOffset, despawnDelay, false, 0);
 	}
 	
 	/**
@@ -1544,9 +1546,9 @@ public abstract class AbstractScript: IEventTimerEvent<string>, IEventTimerCance
 	 * @see #addSpawn(int, IPositionable, bool, long, bool, int)
 	 * @see #addSpawn(int, int, int, int, int, bool, long, bool, int)
 	 */
-	public static Npc addSpawn(int npcId, IPositionable pos, bool randomOffset, TimeSpan despawnDelay, bool isSummonSpawn)
+	public static Npc addSpawn(int npcId, Location location, bool randomOffset, TimeSpan despawnDelay, bool isSummonSpawn)
 	{
-		return addSpawn(npcId, pos.getX(), pos.getY(), pos.getZ(), pos.getHeading(), randomOffset, despawnDelay, isSummonSpawn, 0);
+		return addSpawn(npcId, location.X, location.Y, location.Z, location.Heading, randomOffset, despawnDelay, isSummonSpawn, 0);
 	}
 	
 	/**
@@ -1563,9 +1565,9 @@ public abstract class AbstractScript: IEventTimerEvent<string>, IEventTimerCance
 	 * @see #addSpawn(int, IPositionable, bool, long, bool)
 	 * @see #addSpawn(int, int, int, int, int, bool, long, bool, int)
 	 */
-	public static Npc addSpawn(Npc summoner, int npcId, IPositionable pos, bool randomOffset, int instanceId)
+	public static Npc addSpawn(Npc summoner, int npcId, Location location, bool randomOffset, int instanceId)
 	{
-		return addSpawn(summoner, npcId, pos.getX(), pos.getY(), pos.getZ(), pos.getHeading(), randomOffset, TimeSpan.Zero, false, instanceId);
+		return addSpawn(summoner, npcId, location.X, location.Y, location.Z, location.Heading, randomOffset, TimeSpan.Zero, false, instanceId);
 	}
 	
 	/**
@@ -1583,9 +1585,9 @@ public abstract class AbstractScript: IEventTimerEvent<string>, IEventTimerCance
 	 * @see #addSpawn(int, IPositionable, bool, long, bool)
 	 * @see #addSpawn(int, int, int, int, int, bool, long, bool, int)
 	 */
-	public static Npc addSpawn(int npcId, IPositionable pos, bool randomOffset, TimeSpan despawnDelay, bool isSummonSpawn, int instanceId)
+	public static Npc addSpawn(int npcId, Location location, bool randomOffset, TimeSpan despawnDelay, bool isSummonSpawn, int instanceId)
 	{
-		return addSpawn(npcId, pos.getX(), pos.getY(), pos.getZ(), pos.getHeading(), randomOffset, despawnDelay, isSummonSpawn, instanceId);
+		return addSpawn(npcId, location.X, location.Y, location.Z, location.Heading, randomOffset, despawnDelay, isSummonSpawn, instanceId);
 	}
 	
 	/**
@@ -1693,8 +1695,7 @@ public abstract class AbstractScript: IEventTimerEvent<string>, IEventTimerCance
 			
 			Spawn spawn = new Spawn(npcId);
 			spawn.setInstanceId(instance);
-			spawn.setHeading(heading);
-			spawn.setXYZ(x, y, zValue);
+			spawn.Location = new Location(x, y, zValue, heading);
 			spawn.stopRespawn();
 			
 			Npc npc = spawn.doSpawn(isSummonSpawn);
@@ -1711,7 +1712,7 @@ public abstract class AbstractScript: IEventTimerEvent<string>, IEventTimerCance
 			// Retain monster original position if ENABLE_RANDOM_MONSTER_SPAWNS is enabled.
 			if (Config.ENABLE_RANDOM_MONSTER_SPAWNS && !randomOffset && npc.isMonster())
 			{
-				spawn.setXYZ(x, y, zValue);
+				spawn.Location = new Location(x, y, zValue, spawn.Location.Heading);
 				npc.setXYZ(x, y, zValue);
 				if (heading > -1)
 				{
@@ -1741,15 +1742,15 @@ public abstract class AbstractScript: IEventTimerEvent<string>, IEventTimerCance
 	 * @param instanceId
 	 * @return
 	 */
-	public Trap addTrap(int trapId, int x, int y, int z, int heading, int instanceId)
+	public Trap addTrap(int trapId, Location location, int instanceId)
 	{
 		NpcTemplate npcTemplate = NpcData.getInstance().getTemplate(trapId);
 		Trap trap = new Trap(npcTemplate, instanceId, -1);
 		trap.setCurrentHp(trap.getMaxHp());
 		trap.setCurrentMp(trap.getMaxMp());
 		trap.setInvul(true);
-		trap.setHeading(heading);
-		trap.spawnMe(x, y, z);
+		trap.setHeading(location.Heading);
+		trap.spawnMe(location.Location3D);
 		return trap;
 	}
 	
@@ -2837,9 +2838,9 @@ public abstract class AbstractScript: IEventTimerEvent<string>, IEventTimerCance
 	 * @param loc the location
 	 * @param desire the desire
 	 */
-	protected void addMoveToDesire(Npc npc, Location loc, int desire)
+	protected void addMoveToDesire(Npc npc, Location3D destination, int desire)
 	{
-		npc.getAI().setIntention(CtrlIntention.AI_INTENTION_MOVE_TO, loc);
+		npc.getAI().setIntention(CtrlIntention.AI_INTENTION_MOVE_TO, destination);
 	}
 	
 	/**
