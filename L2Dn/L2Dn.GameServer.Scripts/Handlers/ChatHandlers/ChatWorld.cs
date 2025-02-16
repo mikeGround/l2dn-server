@@ -23,7 +23,7 @@ public class ChatWorld: IChatHandler
 		ChatType.WORLD,
 	};
 	
-	public void handleChat(ChatType type, Player activeChar, String target, String text, bool shareLocation)
+	public void handleChat(ChatType type, Player activeChar, string target, string text, bool shareLocation)
 	{
 		if (!Config.ENABLE_WORLD_CHAT)
 		{
@@ -31,7 +31,7 @@ public class ChatWorld: IChatHandler
 		}
 		
 		DateTime now = DateTime.UtcNow;
-		if (!REUSE.isEmpty())
+		if (REUSE.Count != 0)
 		{
 			List<int> expired = REUSE.Where(r => r.Value <= now).Select(r => r.Key).ToList();
 			foreach (int id in expired)

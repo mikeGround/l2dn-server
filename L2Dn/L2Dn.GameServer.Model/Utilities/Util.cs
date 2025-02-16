@@ -88,46 +88,6 @@ public class Util
 	}
 
 	/**
-	 * @param text - the text to check
-	 * @return {@code true} if {@code text} contains only numbers, {@code false} otherwise
-	 */
-	public static bool isDigit(string? text)
-	{
-		if (string.IsNullOrEmpty(text))
-			return false;
-
-		foreach (char c in text)
-		{
-			if (!char.IsDigit(c))
-			{
-				return false;
-			}
-		}
-
-		return true;
-	}
-
-	/**
-	 * @param text - the text to check
-	 * @return {@code true} if {@code text} contains only letters and/or numbers, {@code false} otherwise
-	 */
-	public static bool isAlphaNumeric(string? text)
-	{
-		if (string.IsNullOrEmpty(text))
-			return false;
-
-		foreach (char c in text)
-		{
-			if (!char.IsLetterOrDigit(c))
-			{
-				return false;
-			}
-		}
-
-		return true;
-	}
-
-	/**
 	 * Format the specified digit using the digit grouping symbol "," (comma).<br>
 	 * For example, 123456789 becomes 123,456,789.
 	 * @param amount - the amount of adena
@@ -247,7 +207,7 @@ public class Util
 		player.sendPacket(new ShowBoardPacket([
 			"0", "0", "0", "0", "0", "0", player.getName(),
 			player.getObjectId().ToString(), player.getAccountName(), "9", " ", " ",
-			text.Replace("<br>", Environment.NewLine), "0", "0", "0", "0"
+			text.Replace("<br>", Environment.NewLine), "0", "0", "0", "0",
 		]));
 	}
 
@@ -255,50 +215,5 @@ public class Util
 	{
 		WorldObject? target = World.getInstance().findObject(targetObjId);
 		return target != null && obj.Distance3D(target) <= radius;
-	}
-
-	/**
-	 * Re-Maps a value from one range to another.
-	 * @param input
-	 * @param inputMin
-	 * @param inputMax
-	 * @param outputMin
-	 * @param outputMax
-	 * @return The mapped value
-	 */
-	public static int map(int input, int inputMin, int inputMax, int outputMin, int outputMax)
-	{
-		return (int.Clamp(input, inputMin, inputMax) - inputMin) * (outputMax - outputMin) / (inputMax - inputMin) +
-			outputMin;
-	}
-
-	/**
-	 * Re-Maps a value from one range to another.
-	 * @param input
-	 * @param inputMin
-	 * @param inputMax
-	 * @param outputMin
-	 * @param outputMax
-	 * @return The mapped value
-	 */
-	public static long map(long input, long inputMin, long inputMax, long outputMin, long outputMax)
-	{
-		return (long.Clamp(input, inputMin, inputMax) - inputMin) * (outputMax - outputMin) / (inputMax - inputMin) +
-			outputMin;
-	}
-
-	/**
-	 * Re-Maps a value from one range to another.
-	 * @param input
-	 * @param inputMin
-	 * @param inputMax
-	 * @param outputMin
-	 * @param outputMax
-	 * @return The mapped value
-	 */
-	public static double map(double input, double inputMin, double inputMax, double outputMin, double outputMax)
-	{
-		return (double.Clamp(input, inputMin, inputMax) - inputMin) * (outputMax - outputMin) / (inputMax - inputMin) +
-			outputMin;
 	}
 }

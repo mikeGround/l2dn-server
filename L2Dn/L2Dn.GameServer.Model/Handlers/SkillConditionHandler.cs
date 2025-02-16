@@ -9,25 +9,25 @@ namespace L2Dn.GameServer.Handlers;
  */
 public class SkillConditionHandler
 {
-	private readonly Map<String, Func<StatSet, ISkillCondition>> _skillConditionHandlerFactories = new();
+	private readonly Map<string, Func<StatSet, ISkillCondition>> _skillConditionHandlerFactories = new();
 
 	private SkillConditionHandler()
 	{
 	}
 	
-	public void registerHandler(String name, Func<StatSet, ISkillCondition> handlerFactory)
+	public void registerHandler(string name, Func<StatSet, ISkillCondition> handlerFactory)
 	{
 		_skillConditionHandlerFactories.put(name, handlerFactory);
 	}
 	
-	public Func<StatSet, ISkillCondition> getHandlerFactory(String name)
+	public Func<StatSet, ISkillCondition> getHandlerFactory(string name)
 	{
 		return _skillConditionHandlerFactories.get(name);
 	}
 	
 	public int size()
 	{
-		return _skillConditionHandlerFactories.size();
+		return _skillConditionHandlerFactories.Count;
 	}
 	
 	private static class SingletonHolder

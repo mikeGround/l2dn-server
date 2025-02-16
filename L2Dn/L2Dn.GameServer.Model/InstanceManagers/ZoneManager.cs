@@ -125,7 +125,7 @@ public class ZoneManager: DataReaderBase
 		// Backup old zone settings
 		foreach (Map<int, ZoneType> map in _classZones.Values)
 		{
-			foreach (ZoneType zone in map.values())
+			foreach (ZoneType zone in map.Values)
 			{
 				if (zone.getSettings() != null)
 				{
@@ -139,7 +139,7 @@ public class ZoneManager: DataReaderBase
 		{
 			foreach (ZoneRegion zoneRegion in zoneRegions)
 			{
-				zoneRegion.getZones().clear();
+				zoneRegion.getZones().Clear();
 				count++;
 			}
 		}
@@ -274,7 +274,7 @@ public class ZoneManager: DataReaderBase
 			zone.Races.ForEach(el => respawnZone.addRaceRespawnPoint(el.Race, el.Point));
 		}
 
-		if (zoneName != null && !zoneName.isEmpty())
+		if (!string.IsNullOrEmpty(zoneName))
 		{
 			zoneType.setName(zoneName);
 		}
@@ -314,7 +314,7 @@ public class ZoneManager: DataReaderBase
 	{
 		_classZones = _zoneTypes.Values.ToFrozenDictionary(info => info.ZoneType, _ => new Map<int, ZoneType>());
 		
-		_spawnTerritories.clear();
+		_spawnTerritories.Clear();
 
 		LoadXmlDocuments<XmlZones>(DataFileLocation.Data, "zones")
 			.Where(tuple => tuple.Document.Enabled)
@@ -420,7 +420,7 @@ public class ZoneManager: DataReaderBase
 			foreach (ZoneType zone in region.getZones().Values)
 			{
 				if (zone.isInsideZone(location))
-					temp.add(zone);
+					temp.Add(zone);
 			}
 		}
 
@@ -442,7 +442,7 @@ public class ZoneManager: DataReaderBase
 			foreach (ZoneType zone in region.getZones().Values)
 			{
 				if (zone.isInsideZone(location))
-					temp.add(zone);
+					temp.Add(zone);
 			}
 		}
 
@@ -517,11 +517,11 @@ public class ZoneManager: DataReaderBase
 	public List<SpawnTerritory> getSpawnTerritories(WorldObject obj)
 	{
 		List<SpawnTerritory> temp = new();
-		foreach (SpawnTerritory territory in _spawnTerritories.values())
+		foreach (SpawnTerritory territory in _spawnTerritories.Values)
 		{
 			if (territory.isInsideZone(obj.getX(), obj.getY(), obj.getZ()))
 			{
-				temp.add(territory);
+				temp.Add(territory);
 			}
 		}
 		return temp;

@@ -1,4 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
+using L2Dn.Extensions;
 using L2Dn.GameServer.CommunityBbs.Managers;
 using L2Dn.GameServer.Data.Sql;
 using L2Dn.GameServer.Data.Xml;
@@ -358,7 +359,7 @@ public class Clan: IIdentifiable, INamable
 	 */
 	public ClanMember getClanMember(string name)
 	{
-		foreach (ClanMember temp in _members.values())
+		foreach (ClanMember temp in _members.Values)
 		{
 			if (temp.getName().equals(name))
 			{
@@ -508,18 +509,18 @@ public class Clan: IIdentifiable, INamable
 	
 	public ICollection<ClanMember> getMembers()
 	{
-		return _members.values();
+		return _members.Values;
 	}
 	
 	public int getMembersCount()
 	{
-		return _members.size();
+		return _members.Count;
 	}
 	
 	public int getSubPledgeMembersCount(int subpl)
 	{
 		int result = 0;
-		foreach (ClanMember temp in _members.values())
+		foreach (ClanMember temp in _members.Values)
 		{
 			if (temp.getPledgeType() == subpl)
 			{
@@ -631,7 +632,7 @@ public class Clan: IIdentifiable, INamable
 	public List<Player> getOnlineMembers(int exclude)
 	{
 		List<Player> result = new();
-		foreach (ClanMember member in _members.values())
+		foreach (ClanMember member in _members.Values)
 		{
 			if ((member.getObjectId() != exclude) && member.isOnline() && (member.getPlayer() != null))
 			{
@@ -647,7 +648,7 @@ public class Clan: IIdentifiable, INamable
 	public int getOnlineMembersCount()
 	{
 		int count = 0;
-		foreach (ClanMember member in _members.values())
+		foreach (ClanMember member in _members.Values)
 		{
 			if (member.isOnline())
 			{
@@ -820,7 +821,7 @@ public class Clan: IIdentifiable, INamable
 	 */
 	public bool isMember(int id)
 	{
-		return ((id != 0) && _members.containsKey(id));
+		return ((id != 0) && _members.ContainsKey(id));
 	}
 	
 	/**
@@ -1237,7 +1238,7 @@ public class Clan: IIdentifiable, INamable
 			return new List<Skill>();
 		}
 		
-		return _skills.values();
+		return _skills.Values;
 	}
 	
 	/**
@@ -1334,7 +1335,7 @@ public class Clan: IIdentifiable, INamable
 			SystemMessagePacket sm = new SystemMessagePacket(SystemMessageId.THE_CLAN_SKILL_S1_HAS_BEEN_ADDED);
 			sm.Params.addSkillName(newSkill.getId());
 			
-			foreach (ClanMember temp in _members.values())
+			foreach (ClanMember temp in _members.Values)
 			{
 				if ((temp != null) && (temp.getPlayer() != null) && temp.isOnline())
 				{
@@ -1364,9 +1365,9 @@ public class Clan: IIdentifiable, INamable
 	
 	public void addSkillEffects()
 	{
-		foreach (Skill skill in _skills.values())
+		foreach (Skill skill in _skills.Values)
 		{
-			foreach (ClanMember temp in _members.values())
+			foreach (ClanMember temp in _members.Values)
 			{
 				try
 				{
@@ -1391,7 +1392,7 @@ public class Clan: IIdentifiable, INamable
 		}
 		
 		SocialClass playerSocialClass = (SocialClass)player.getPledgeClass() + 1;
-		foreach (Skill skill in _skills.values())
+		foreach (Skill skill in _skills.Values)
 		{
 			SkillLearn skillLearn = SkillTreeData.getInstance().getPledgeSkill(skill.getId(), skill.getLevel());
 			if ((skillLearn == null) || (skillLearn.getSocialClass() == null) || (playerSocialClass >= skillLearn.getSocialClass()))
@@ -1401,7 +1402,7 @@ public class Clan: IIdentifiable, INamable
 		}
 		if (player.getPledgeType() == 0)
 		{
-			foreach (Skill skill in _subPledgeSkills.values())
+			foreach (Skill skill in _subPledgeSkills.Values)
 			{
 				SkillLearn skillLearn = SkillTreeData.getInstance().getSubPledgeSkill(skill.getId(), skill.getLevel());
 				if ((skillLearn == null) || (skillLearn.getSocialClass() == null) || (playerSocialClass >= skillLearn.getSocialClass()))
@@ -1436,14 +1437,14 @@ public class Clan: IIdentifiable, INamable
 			return;
 		}
 		
-		foreach (Skill skill in _skills.values())
+		foreach (Skill skill in _skills.Values)
 		{
 			player.removeSkill(skill, false); // Skill is not saved to player DB
 		}
 		
 		if (player.getPledgeType() == 0)
 		{
-			foreach (Skill skill in _subPledgeSkills.values())
+			foreach (Skill skill in _subPledgeSkills.Values)
 			{
 				player.removeSkill(skill, false); // Skill is not saved to player DB
 			}
@@ -1469,7 +1470,7 @@ public class Clan: IIdentifiable, INamable
 			return;
 		}
 		
-		foreach (Skill skill in _skills.values())
+		foreach (Skill skill in _skills.Values)
 		{
 			if (disable)
 			{
@@ -1483,7 +1484,7 @@ public class Clan: IIdentifiable, INamable
 		
 		if (player.getPledgeType() == 0)
 		{
-			foreach (Skill skill in _subPledgeSkills.values())
+			foreach (Skill skill in _subPledgeSkills.Values)
 			{
 				if (disable)
 				{
@@ -1530,7 +1531,7 @@ public class Clan: IIdentifiable, INamable
 	public void broadcastToOnlineMembers<TPacket>(TPacket packet)
 		where TPacket: struct, IOutgoingPacket
 	{
-		foreach (ClanMember member in _members.values())
+		foreach (ClanMember member in _members.Values)
 		{
 			if ((member != null) && member.isOnline())
 			{
@@ -1541,7 +1542,7 @@ public class Clan: IIdentifiable, INamable
 	
 	public void broadcastCSToOnlineMembers(CreatureSayPacket packet, Player broadcaster)
 	{
-		foreach (ClanMember member in _members.values())
+		foreach (ClanMember member in _members.Values)
 		{
 			if ((member != null) && member.isOnline() && !BlockList.isBlocked(member.getPlayer(), broadcaster))
 			{
@@ -1553,7 +1554,7 @@ public class Clan: IIdentifiable, INamable
 	public void broadcastToOtherOnlineMembers<TPacket>(TPacket packet, Player player)
 		where TPacket: struct, IOutgoingPacket
 	{
-		foreach (ClanMember member in _members.values())
+		foreach (ClanMember member in _members.Values)
 		{
 			if ((member != null) && member.isOnline() && (member.getPlayer() != player))
 			{
@@ -1574,7 +1575,7 @@ public class Clan: IIdentifiable, INamable
 	
 	public bool isAtWarWith(int clanId)
 	{
-		return _atWarWith.containsKey(clanId);
+		return _atWarWith.ContainsKey(clanId);
 	}
 	
 	public bool isAtWarWith(Clan clan)
@@ -1583,7 +1584,7 @@ public class Clan: IIdentifiable, INamable
 		{
 			return false;
 		}
-		return _atWarWith.containsKey(clan.getId());
+		return _atWarWith.ContainsKey(clan.getId());
 	}
 	
 	public int getHiredGuards()
@@ -1598,7 +1599,7 @@ public class Clan: IIdentifiable, INamable
 	
 	public bool isAtWar()
 	{
-		return !_atWarWith.isEmpty();
+		return _atWarWith.Count != 0;
 	}
 	
 	public Map<int, ClanWar> getWarList()
@@ -1661,7 +1662,7 @@ public class Clan: IIdentifiable, INamable
 		
 		public ICollection<Skill> getSkills()
 		{
-			return _subPledgeSkills.values();
+			return _subPledgeSkills.Values;
 		}
 		
 		public Skill getSkill(int id)
@@ -1747,7 +1748,7 @@ public class Clan: IIdentifiable, INamable
 			return null;
 		}
 		
-		foreach (SubPledge sp in _subPledges.values())
+		foreach (SubPledge sp in _subPledges.Values)
 		{
 			if (sp.getName().equalsIgnoreCase(pledgeName))
 			{
@@ -1767,7 +1768,7 @@ public class Clan: IIdentifiable, INamable
 		{
 			return new List<SubPledge>();
 		}
-		return _subPledges.values();
+		return _subPledges.Values;
 	}
 	
 	public SubPledge createSubPledge(Player player, int pledgeTypeValue, int leaderId, string subPledgeName)
@@ -1967,7 +1968,7 @@ public class Clan: IIdentifiable, INamable
 				LOGGER.Error("Could not store clan privs for rank: " + e);
 			}
 			
-			foreach (ClanMember cm in _members.values())
+			foreach (ClanMember cm in _members.Values)
 			{
 				if (cm.isOnline() && (cm.getPowerGrade() == rank) && (cm.getPlayer() != null))
 				{
@@ -2014,13 +2015,13 @@ public class Clan: IIdentifiable, INamable
 	 */
 	public ICollection<RankPrivs> getAllRankPrivs()
 	{
-		return _privs == null ? new List<RankPrivs>() : _privs.values();
+		return _privs == null ? new List<RankPrivs>() : _privs.Values;
 	}
 	
 	public int getLeaderSubPledge(int leaderId)
 	{
 		int id = 0;
-		foreach (SubPledge sp in _subPledges.values())
+		foreach (SubPledge sp in _subPledges.Values)
 		{
 			if (sp.getLeaderId() == 0)
 			{
@@ -2051,7 +2052,7 @@ public class Clan: IIdentifiable, INamable
 		if ((_reputationScore >= 0) && (value < 0))
 		{
 			broadcastToOnlineMembers(new SystemMessagePacket(SystemMessageId.SINCE_THE_CLAN_REPUTATION_HAS_DROPPED_BELOW_0_YOUR_CLAN_SKILL_S_WILL_BE_DE_ACTIVATED));
-			foreach (ClanMember member in _members.values())
+			foreach (ClanMember member in _members.Values)
 			{
 				if (member.isOnline() && (member.getPlayer() != null))
 				{
@@ -2062,7 +2063,7 @@ public class Clan: IIdentifiable, INamable
 		else if ((_reputationScore < 0) && (value >= 0))
 		{
 			broadcastToOnlineMembers(new SystemMessagePacket(SystemMessageId.CLAN_SKILLS_WILL_NOW_BE_ACTIVATED_SINCE_THE_CLAN_REPUTATION_IS_1_OR_HIGHER));
-			foreach (ClanMember member in _members.values())
+			foreach (ClanMember member in _members.Values)
 			{
 				if (member.isOnline() && (member.getPlayer() != null))
 				{
@@ -2285,7 +2286,7 @@ public class Clan: IIdentifiable, INamable
 			return false;
 		}
 		
-		if (ClanTable.getInstance().getClanAllies(playerAllyId.Value).size() >= Config.ALT_MAX_NUM_OF_CLANS_IN_ALLY)
+		if (ClanTable.getInstance().getClanAllies(playerAllyId.Value).Count >= Config.ALT_MAX_NUM_OF_CLANS_IN_ALLY)
 		{
 			player.sendPacket(SystemMessageId.YOU_HAVE_EXCEEDED_THE_LIMIT);
 			return false;
@@ -2362,7 +2363,7 @@ public class Clan: IIdentifiable, INamable
 			player.sendPacket(SystemMessageId.AS_YOU_ARE_CURRENTLY_SCHEDULE_FOR_CLAN_DISSOLUTION_NO_ALLIANCE_CAN_BE_CREATED);
 			return;
 		}
-		if (!Util.isAlphaNumeric(allyName))
+		if (string.IsNullOrEmpty(allyName) || !allyName.ContainsAlphaNumericOnly())
 		{
 			player.sendPacket(SystemMessageId.INCORRECT_ALLIANCE_NAME_PLEASE_TRY_AGAIN);
 			return;
@@ -2452,7 +2453,7 @@ public class Clan: IIdentifiable, INamable
 			case 0:
 			{
 				// Upgrade to 1
-				if ((player.getSp() >= 1000) && (player.getAdena() >= 150000) && (_members.size() >= 1) && player.reduceAdena("ClanLvl", 150000, player.getTarget(), true))
+				if ((player.getSp() >= 1000) && (player.getAdena() >= 150000) && (_members.Count >= 1) && player.reduceAdena("ClanLvl", 150000, player.getTarget(), true))
 				{
 					player.setSp(player.getSp() - 1000);
 					SystemMessagePacket sp = new SystemMessagePacket(SystemMessageId.YOUR_SP_HAS_DECREASED_BY_S1);
@@ -2465,7 +2466,7 @@ public class Clan: IIdentifiable, INamable
 			case 1:
 			{
 				// Upgrade to 2
-				if ((player.getSp() >= 15000) && (player.getAdena() >= 300000) && (_members.size() >= 1) && player.reduceAdena("ClanLvl", 300000, player.getTarget(), true))
+				if ((player.getSp() >= 15000) && (player.getAdena() >= 300000) && (_members.Count >= 1) && player.reduceAdena("ClanLvl", 300000, player.getTarget(), true))
 				{
 					player.setSp(player.getSp() - 15000);
 					SystemMessagePacket sp = new SystemMessagePacket(SystemMessageId.YOUR_SP_HAS_DECREASED_BY_S1);
@@ -2478,7 +2479,7 @@ public class Clan: IIdentifiable, INamable
 			case 2:
 			{
 				// Upgrade to 3 (itemId 1419 == Blood Mark)
-				if ((player.getSp() >= 100000) && (player.getInventory().getItemByItemId(1419) != null) && (_members.size() >= 1) && player.destroyItemByItemId("ClanLvl", 1419, 100, player.getTarget(), true))
+				if ((player.getSp() >= 100000) && (player.getInventory().getItemByItemId(1419) != null) && (_members.Count >= 1) && player.destroyItemByItemId("ClanLvl", 1419, 100, player.getTarget(), true))
 				{
 					player.setSp(player.getSp() - 100000);
 					SystemMessagePacket sp = new SystemMessagePacket(SystemMessageId.YOUR_SP_HAS_DECREASED_BY_S1);
@@ -2494,7 +2495,7 @@ public class Clan: IIdentifiable, INamable
 			case 3:
 			{
 				// Upgrade to 4 (itemId 1419 == Blood Mark)
-				if ((player.getSp() >= 1000000) && (player.getInventory().getItemByItemId(1419) != null) && (_members.size() >= 1) && player.destroyItemByItemId("ClanLvl", 1419, 5000, player.getTarget(), true))
+				if ((player.getSp() >= 1000000) && (player.getInventory().getItemByItemId(1419) != null) && (_members.Count >= 1) && player.destroyItemByItemId("ClanLvl", 1419, 5000, player.getTarget(), true))
 				{
 					player.setSp(player.getSp() - 1000000);
 					SystemMessagePacket sp = new SystemMessagePacket(SystemMessageId.YOUR_SP_HAS_DECREASED_BY_S1);
@@ -2510,7 +2511,7 @@ public class Clan: IIdentifiable, INamable
 			case 4:
 			{
 				// Upgrade to 5 (itemId 1419 == Blood Mark)
-				if ((player.getSp() >= 5000000) && (player.getInventory().getItemByItemId(1419) != null) && (_members.size() >= 1) && player.destroyItemByItemId("ClanLvl", 1419, 10000, player.getTarget(), true))
+				if ((player.getSp() >= 5000000) && (player.getInventory().getItemByItemId(1419) != null) && (_members.Count >= 1) && player.destroyItemByItemId("ClanLvl", 1419, 10000, player.getTarget(), true))
 				{
 					player.setSp(player.getSp() - 5000000);
 					SystemMessagePacket sp = new SystemMessagePacket(SystemMessageId.YOUR_SP_HAS_DECREASED_BY_S1);
@@ -2709,7 +2710,7 @@ public class Clan: IIdentifiable, INamable
 			return true;
 		}
 		// other sub-pledges
-		foreach (SubPledge subunit in _subPledges.values())
+		foreach (SubPledge subunit in _subPledges.Values)
 		{
 			// disable academy
 			if (subunit.getId() == -1)
@@ -2766,11 +2767,11 @@ public class Clan: IIdentifiable, INamable
 	public List<PledgeSkillListPacket.SubPledgeSkill> getAllSubSkills()
 	{
 		List<PledgeSkillListPacket.SubPledgeSkill> list = new();
-		foreach (Skill skill in _subPledgeSkills.values())
+		foreach (Skill skill in _subPledgeSkills.Values)
 		{
 			list.Add(new PledgeSkillListPacket.SubPledgeSkill(0, skill.getId(), skill.getLevel()));
 		}
-		foreach (SubPledge subunit in _subPledges.values())
+		foreach (SubPledge subunit in _subPledges.Values)
 		{
 			foreach (Skill skill in subunit.getSkills())
 			{
@@ -2840,7 +2841,7 @@ public class Clan: IIdentifiable, INamable
 	
 	public int getWarCount()
 	{
-		return _atWarWith.size();
+		return _atWarWith.Count;
 	}
 	
 	public void addWar(int clanId, ClanWar war)
@@ -2894,7 +2895,7 @@ public class Clan: IIdentifiable, INamable
 		}
 		
 		int currentMaxOnline = 0;
-		foreach (ClanMember member in _members.values())
+		foreach (ClanMember member in _members.Values)
 		{
 			if (member.getOnlineTime() > Config.ALT_CLAN_MEMBERS_TIME_FOR_BONUS)
 			{
@@ -2974,7 +2975,7 @@ public class Clan: IIdentifiable, INamable
 		getVariables().set("PREVIOUS_HUNTING_POINTS", getHuntingPoints());
 		
 		// Reset
-		_members.values().forEach(x => x.resetBonus());
+		_members.Values.ForEach(x => x.resetBonus());
 		getVariables().remove("HUNTING_POINTS");
 		
 		// force store

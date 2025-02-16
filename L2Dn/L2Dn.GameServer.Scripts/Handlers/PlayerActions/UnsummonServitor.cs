@@ -1,8 +1,8 @@
+using L2Dn.Extensions;
 using L2Dn.GameServer.Handlers;
 using L2Dn.GameServer.Model;
 using L2Dn.GameServer.Model.Actor;
 using L2Dn.GameServer.Network.Enums;
-using L2Dn.GameServer.Utilities;
 
 namespace L2Dn.GameServer.Scripts.Handlers.PlayerActions;
 
@@ -17,7 +17,7 @@ public class UnsummonServitor: IPlayerActionHandler
 		bool canUnsummon = true;
 		if (player.hasServitors())
 		{
-			foreach (Summon s in player.getServitors().values())
+			foreach (Summon s in player.getServitors().Values)
 			{
 				if (s.isBetrayed())
 				{
@@ -32,10 +32,10 @@ public class UnsummonServitor: IPlayerActionHandler
 					break;
 				}
 			}
-			
+
 			if (canUnsummon)
 			{
-				player.getServitors().values().forEach(s => s.unSummon(player));
+				player.getServitors().Values.ForEach(s => s.unSummon(player));
 			}
 		}
 		else
@@ -43,7 +43,7 @@ public class UnsummonServitor: IPlayerActionHandler
 			player.sendPacket(SystemMessageId.YOU_DON_T_HAVE_A_SERVITOR);
 		}
 	}
-	
+
 	public bool isPetAction()
 	{
 		return true;

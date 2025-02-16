@@ -44,12 +44,12 @@ public class ItemAuctionManager: DataReaderBase
 	
 	public void load()
 	{
-		_managerInstances.clear();
+		_managerInstances.Clear();
 
 		LoadXmlDocument(DataFileLocation.Data, "ItemAuctions.xml").Elements("list").Elements("instance")
 			.ForEach(parseElement);
 
-		LOGGER.Info(GetType().Name +": Loaded " + _managerInstances.size() + " instances.");
+		LOGGER.Info(GetType().Name +": Loaded " + _managerInstances.Count + " instances.");
 	}
 	
 	private void parseElement(XElement element)
@@ -57,7 +57,7 @@ public class ItemAuctionManager: DataReaderBase
 		try
 		{
 			int instanceId = element.GetAttributeValueAsInt32("id");
-			if (_managerInstances.containsKey(instanceId))
+			if (_managerInstances.ContainsKey(instanceId))
 				throw new Exception("Dublicated instanceId " + instanceId);
 			
 			ItemAuctionInstance instance = new ItemAuctionInstance(instanceId, _auctionIds, element);
@@ -71,7 +71,7 @@ public class ItemAuctionManager: DataReaderBase
 	
 	public void shutdown()
 	{
-		foreach (ItemAuctionInstance instance in _managerInstances.values())
+		foreach (ItemAuctionInstance instance in _managerInstances.Values)
 		{
 			instance.shutdown();
 		}

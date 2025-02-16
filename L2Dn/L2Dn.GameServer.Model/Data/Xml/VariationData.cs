@@ -26,9 +26,9 @@ public class VariationData: DataReaderBase
 	
 	public void load()
 	{
-		_itemGroups.clear();
-		_variations.clear();
-		_fees.clear();
+		_itemGroups.Clear();
+		_variations.Clear();
+		_fees.Clear();
 
 		XmlVariationData variationData = LoadXmlDocument<XmlVariationData>(DataFileLocation.Data,
 			"stats/augmentation/Variations.xml");
@@ -128,7 +128,7 @@ public class VariationData: DataReaderBase
 					}
 				}
 
-				sets.add(new OptionDataCategory(options, itemIds, chance));
+				sets.Add(new OptionDataCategory(options, itemIds, chance));
 			}
 
 			variation.setEffectGroup(order, new OptionDataGroup(sets));
@@ -140,7 +140,7 @@ public class VariationData: DataReaderBase
 			list = new();
 		}
 
-		list.add(variation);
+		list.Add(variation);
 
 		_variations.put(mineralId, list);
 		((EtcItem)ItemData.getInstance().getTemplate(mineralId)).setMineral();
@@ -219,12 +219,12 @@ public class VariationData: DataReaderBase
 	
 	public int getVariationCount()
 	{
-		return _variations.size();
+		return _variations.Count;
 	}
 	
 	public int getFeeCount()
 	{
-		return _fees.size();
+		return _fees.Count;
 	}
 	
 	/**
@@ -280,7 +280,7 @@ public class VariationData: DataReaderBase
 		{
 			// FIXME This will happen when the data is pre-rework or when augments were manually given, but still that's a cheap solution
 			_logger.Warn(GetType().Name + ": Cancellation fee not found for item [" + itemId + "] and mineral [" + mineralId + "]");
-			fee = fees.values().FirstOrDefault();
+			fee = fees.Values.FirstOrDefault();
 			if (fee == null)
 				return -1;
 		}

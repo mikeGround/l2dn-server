@@ -29,8 +29,8 @@ public class DoorData: DataReaderBase
 	
 	public void load()
 	{
-		_doors.clear();
-		_groups.clear();
+		_doors.Clear();
+		_groups.Clear();
 		
 		LoadXmlDocument<XmlDoorList>(DataFileLocation.Data, "DoorData.xml")
 			.Doors.ForEach(xmlDoor =>
@@ -99,12 +99,12 @@ public class DoorData: DataReaderBase
 	
 	public Set<int> getDoorsByGroup(string groupName)
 	{
-		return _groups.getOrDefault(groupName, new());
+		return _groups.GetValueOrDefault(groupName, []);
 	}
 	
 	public ICollection<Door> getDoors()
 	{
-		return _doors.values();
+		return _doors.Values;
 	}
 	
 	public bool checkIfDoorsBetween(Location3D location, Location3D targetLocation, Instance? instance = null,

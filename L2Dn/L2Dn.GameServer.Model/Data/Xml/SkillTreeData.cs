@@ -87,25 +87,25 @@ public class SkillTreeData: DataReaderBase
 	public void load()
 	{
 		_loading = true;
-		_classSkillTrees.clear();
-		_collectSkillTree.clear();
-		_fishingSkillTree.clear();
-		_pledgeSkillTree.clear();
-		_subClassSkillTree.clear();
-		_subPledgeSkillTree.clear();
-		_transferSkillTrees.clear();
-		_transformSkillTree.clear();
-		_nobleSkillTree.clear();
-		_abilitySkillTree.clear();
-		_alchemySkillTree.clear();
-		_heroSkillTree.clear();
-		_gameMasterSkillTree.clear();
-		_gameMasterAuraSkillTree.clear();
-		_raceSkillTree.clear();
-		_revelationSkillTree.clear();
-		_dualClassSkillTree.clear();
-		_removeSkillCache.clear();
-		_awakeningSaveSkillTree.clear();
+		_classSkillTrees.Clear();
+		_collectSkillTree.Clear();
+		_fishingSkillTree.Clear();
+		_pledgeSkillTree.Clear();
+		_subClassSkillTree.Clear();
+		_subPledgeSkillTree.Clear();
+		_transferSkillTrees.Clear();
+		_transformSkillTree.Clear();
+		_nobleSkillTree.Clear();
+		_abilitySkillTree.Clear();
+		_alchemySkillTree.Clear();
+		_heroSkillTree.Clear();
+		_gameMasterSkillTree.Clear();
+		_gameMasterAuraSkillTree.Clear();
+		_raceSkillTree.Clear();
+		_revelationSkillTree.Clear();
+		_dualClassSkillTree.Clear();
+		_removeSkillCache.Clear();
+		_awakeningSaveSkillTree.Clear();
 		
 		// Load files.
 		LoadXmlDocuments<XmlSkillTreeList>(DataFileLocation.Data, "skillTrees", true)
@@ -353,7 +353,7 @@ public class SkillTreeData: DataReaderBase
 	 */
 	public ICollection<SkillLearn> getRaceSkillTree(Race race)
 	{
-		return _raceSkillTree.containsKey(race) ? _raceSkillTree.get(race).values() : [];
+		return _raceSkillTree.TryGetValue(race, out Map<long, SkillLearn>? skillTree) ? skillTree.Values : [];
 	}
 	
 	/**
@@ -444,9 +444,9 @@ public class SkillTreeData: DataReaderBase
 	public List<Skill> getNobleSkillTree()
 	{
 		List<Skill> result = new();
-		foreach (SkillLearn skill in _nobleSkillTree.values())
+		foreach (SkillLearn skill in _nobleSkillTree.Values)
 		{
-			result.add(SkillData.getInstance().getSkill(skill.getSkillId(), skill.getSkillLevel()));
+			result.Add(SkillData.getInstance().getSkill(skill.getSkillId(), skill.getSkillLevel()));
 		}
 		return result;
 	}
@@ -458,11 +458,11 @@ public class SkillTreeData: DataReaderBase
 	public List<Skill> getNobleSkillAutoGetTree()
 	{
 		List<Skill> result = new();
-		foreach (SkillLearn skill in _nobleSkillTree.values())
+		foreach (SkillLearn skill in _nobleSkillTree.Values)
 		{
 			if (skill.isAutoGet())
 			{
-				result.add(SkillData.getInstance().getSkill(skill.getSkillId(), skill.getSkillLevel()));
+				result.Add(SkillData.getInstance().getSkill(skill.getSkillId(), skill.getSkillLevel()));
 			}
 		}
 		return result;
@@ -475,9 +475,9 @@ public class SkillTreeData: DataReaderBase
 	public List<Skill> getHeroSkillTree()
 	{
 		List<Skill> result = new();
-		foreach (SkillLearn skill in _heroSkillTree.values())
+		foreach (SkillLearn skill in _heroSkillTree.Values)
 		{
-			result.add(SkillData.getInstance().getSkill(skill.getSkillId(), skill.getSkillLevel()));
+			result.Add(SkillData.getInstance().getSkill(skill.getSkillId(), skill.getSkillLevel()));
 		}
 		return result;
 	}
@@ -489,9 +489,9 @@ public class SkillTreeData: DataReaderBase
 	public List<Skill> getGMSkillTree()
 	{
 		List<Skill> result = new();
-		foreach (SkillLearn skill in _gameMasterSkillTree.values())
+		foreach (SkillLearn skill in _gameMasterSkillTree.Values)
 		{
-			result.add(SkillData.getInstance().getSkill(skill.getSkillId(), skill.getSkillLevel()));
+			result.Add(SkillData.getInstance().getSkill(skill.getSkillId(), skill.getSkillLevel()));
 		}
 		return result;
 	}
@@ -503,9 +503,9 @@ public class SkillTreeData: DataReaderBase
 	public List<Skill> getGMAuraSkillTree()
 	{
 		List<Skill> result = new();
-		foreach (SkillLearn skill in _gameMasterAuraSkillTree.values())
+		foreach (SkillLearn skill in _gameMasterAuraSkillTree.Values)
 		{
-			result.add(SkillData.getInstance().getSkill(skill.getSkillId(), skill.getSkillLevel()));
+			result.Add(SkillData.getInstance().getSkill(skill.getSkillId(), skill.getSkillLevel()));
 		}
 		return result;
 	}
@@ -518,7 +518,7 @@ public class SkillTreeData: DataReaderBase
 	public bool hasAvailableSkills(Player player, CharacterClass classId)
 	{
 		Map<long, SkillLearn> skills = getCompleteClassSkillTree(classId);
-		foreach (SkillLearn skill in skills.values())
+		foreach (SkillLearn skill in skills.Values)
 		{
 			if (skill.getSkillId() == (int)CommonSkill.DIVINE_INSPIRATION || skill.isAutoGet() ||
 			    skill.isLearnedByFS() || skill.getGetLevel() > player.getLevel())
@@ -567,7 +567,7 @@ public class SkillTreeData: DataReaderBase
 	{
 		Set<SkillLearn> result = new();
 		Map<long, SkillLearn> skills = getCompleteClassSkillTree(classId);
-		if (skills.isEmpty())
+		if (skills.Count == 0)
 		{
 			// The Skill Tree for this class is undefined.
 			_logger.Warn(GetType().Name + ": Skilltree for class " + classId + " is not defined!");
@@ -586,7 +586,7 @@ public class SkillTreeData: DataReaderBase
 			}
 
 			// Forgotten Scroll requirements checked above.
-			if (!includeRequiredItems && !skill.getRequiredItems().isEmpty() && !skill.isLearnedByFS())
+			if (!includeRequiredItems && skill.getRequiredItems().Count != 0 && !skill.isLearnedByFS())
 			{
 				continue;
 			}
@@ -704,7 +704,7 @@ public class SkillTreeData: DataReaderBase
 		for (int i = 0; i < 1000; i++)
 		{
 			learnable = getAvailableSkills(player, classId, includeByFs, includeAutoGet, includeRequiredItems, holder);
-			if (learnable.isEmpty())
+			if (learnable.Count == 0)
 			{
 				break;
 			}
@@ -756,7 +756,7 @@ public class SkillTreeData: DataReaderBase
 				}
 			}
 		}
-		return holder.getSkills().values();
+		return holder.getSkills().Values;
 	}
 	
 	/**
@@ -768,7 +768,7 @@ public class SkillTreeData: DataReaderBase
 	{
 		List<SkillLearn> result = new();
 		Map<long, SkillLearn> skills = getCompleteClassSkillTree(player.getClassId());
-		if (skills.isEmpty())
+		if (skills.Count == 0)
 		{
 			// The Skill Tree for this class is undefined, so we return an empty list.
 			_logger.Warn(GetType().Name + ": Skill Tree for this class Id(" + player.getClassId() + ") is not defined!");
@@ -776,7 +776,7 @@ public class SkillTreeData: DataReaderBase
 		}
 		
 		Race race = player.getRace();
-		foreach (SkillLearn skill in skills.values())
+		foreach (SkillLearn skill in skills.Values)
 		{
 			if (!skill.isAutoGet())
 			{
@@ -798,12 +798,12 @@ public class SkillTreeData: DataReaderBase
 			{
 				if (oldSkill.getLevel() < skill.getSkillLevel())
 				{
-					result.add(skill);
+					result.Add(skill);
 				}
 			}
 			else
 			{
-				result.add(skill);
+				result.Add(skill);
 			}
 		}
 		
@@ -865,7 +865,7 @@ public class SkillTreeData: DataReaderBase
 	{
 		List<SkillLearn> result = new();
 		Race playerRace = player.getRace();
-		foreach (SkillLearn skill  in  _fishingSkillTree.values())
+		foreach (SkillLearn skill  in  _fishingSkillTree.Values)
 		{
 			// If skill is Race specific and the player's race isn't allowed, skip it.
 			if (!skill.getRaces().isEmpty() && !skill.getRaces().Contains(playerRace))
@@ -880,12 +880,12 @@ public class SkillTreeData: DataReaderBase
 				{
 					if (oldSkill.getLevel() == skill.getSkillLevel() - 1)
 					{
-						result.add(skill);
+						result.Add(skill);
 					}
 				}
 				else if (skill.getSkillLevel() == 1)
 				{
-					result.add(skill);
+					result.Add(skill);
 				}
 			}
 		}
@@ -902,12 +902,12 @@ public class SkillTreeData: DataReaderBase
 	{
 		List<SkillLearn> result = new();
 		Map<long, SkillLearn> revelationSkills = _revelationSkillTree.get(type);
-		foreach (SkillLearn skill  in  revelationSkills.values())
+		foreach (SkillLearn skill  in  revelationSkills.Values)
 		{
 			Skill oldSkill = player.getSkills().get(skill.getSkillId());
 			if (oldSkill == null)
 			{
-				result.add(skill);
+				result.Add(skill);
 			}
 		}
 		return result;
@@ -921,7 +921,7 @@ public class SkillTreeData: DataReaderBase
 	public List<SkillLearn> getAvailableAlchemySkills(Player player)
 	{
 		List<SkillLearn> result = new();
-		foreach (SkillLearn skill  in  _alchemySkillTree.values())
+		foreach (SkillLearn skill  in  _alchemySkillTree.Values)
 		{
 			if (skill.isLearnedByNpc() && player.getLevel() >= skill.getGetLevel())
 			{
@@ -930,12 +930,12 @@ public class SkillTreeData: DataReaderBase
 				{
 					if (oldSkill.getLevel() == skill.getSkillLevel() - 1)
 					{
-						result.add(skill);
+						result.Add(skill);
 					}
 				}
 				else if (skill.getSkillLevel() == 1)
 				{
-					result.add(skill);
+					result.Add(skill);
 				}
 			}
 		}
@@ -950,19 +950,19 @@ public class SkillTreeData: DataReaderBase
 	public List<SkillLearn> getAvailableCollectSkills(Player player)
 	{
 		List<SkillLearn> result = new();
-		foreach (SkillLearn skill  in  _collectSkillTree.values())
+		foreach (SkillLearn skill  in  _collectSkillTree.Values)
 		{
 			Skill oldSkill = player.getSkills().get(skill.getSkillId());
 			if (oldSkill != null)
 			{
 				if (oldSkill.getLevel() == skill.getSkillLevel() - 1)
 				{
-					result.add(skill);
+					result.Add(skill);
 				}
 			}
 			else if (skill.getSkillLevel() == 1)
 			{
-				result.add(skill);
+				result.Add(skill);
 			}
 		}
 		return result;
@@ -977,17 +977,17 @@ public class SkillTreeData: DataReaderBase
 	{
 		List<SkillLearn> result = new();
 		CharacterClass classId = player.getClassId();
-		if (!_transferSkillTrees.containsKey(classId))
+		if (!_transferSkillTrees.TryGetValue(classId, out Map<long, SkillLearn>? skillTree))
 		{
 			return result;
 		}
 		
-		foreach (SkillLearn skill  in  _transferSkillTrees.get(classId).values())
+		foreach (SkillLearn skill in skillTree.Values)
 		{
 			// If player doesn't know this transfer skill:
 			if (player.getKnownSkill(skill.getSkillId()) == null)
 			{
-				result.add(skill);
+				result.Add(skill);
 			}
 		}
 		return result;
@@ -1002,7 +1002,7 @@ public class SkillTreeData: DataReaderBase
 	{
 		List<SkillLearn> result = new();
 		Race race = player.getRace();
-		foreach (SkillLearn skill  in  _transformSkillTree.values())
+		foreach (SkillLearn skill  in  _transformSkillTree.Values)
 		{
 			if (player.getLevel() >= skill.getGetLevel() && (skill.getRaces().isEmpty() || skill.getRaces().Contains(race)))
 			{
@@ -1011,12 +1011,12 @@ public class SkillTreeData: DataReaderBase
 				{
 					if (oldSkill.getLevel() == skill.getSkillLevel() - 1)
 					{
-						result.add(skill);
+						result.Add(skill);
 					}
 				}
 				else if (skill.getSkillLevel() == 1)
 				{
-					result.add(skill);
+					result.Add(skill);
 				}
 			}
 		}
@@ -1031,7 +1031,7 @@ public class SkillTreeData: DataReaderBase
 	public List<SkillLearn> getAvailablePledgeSkills(Clan clan)
 	{
 		List<SkillLearn> result = new();
-		foreach (SkillLearn skill  in  _pledgeSkillTree.values())
+		foreach (SkillLearn skill  in  _pledgeSkillTree.Values)
 		{
 			if (!skill.isResidencialSkill() && clan.getLevel() >= skill.getGetLevel())
 			{
@@ -1040,12 +1040,12 @@ public class SkillTreeData: DataReaderBase
 				{
 					if (oldSkill.getLevel() + 1 == skill.getSkillLevel())
 					{
-						result.add(skill);
+						result.Add(skill);
 					}
 				}
 				else if (skill.getSkillLevel() == 1)
 				{
-					result.add(skill);
+					result.Add(skill);
 				}
 			}
 		}
@@ -1061,7 +1061,7 @@ public class SkillTreeData: DataReaderBase
 	public Map<int, SkillLearn> getMaxPledgeSkills(Clan clan, bool includeSquad)
 	{
 		Map<int, SkillLearn> result = new();
-		foreach (SkillLearn skill  in  _pledgeSkillTree.values())
+		foreach (SkillLearn skill  in  _pledgeSkillTree.Values)
 		{
 			if (!skill.isResidencialSkill() && clan.getLevel() >= skill.getGetLevel())
 			{
@@ -1075,7 +1075,7 @@ public class SkillTreeData: DataReaderBase
 		
 		if (includeSquad)
 		{
-			foreach (SkillLearn skill  in  _subPledgeSkillTree.values())
+			foreach (SkillLearn skill  in  _subPledgeSkillTree.Values)
 			{
 				if (clan.getLevel() >= skill.getGetLevel())
 				{
@@ -1098,11 +1098,11 @@ public class SkillTreeData: DataReaderBase
 	public List<SkillLearn> getAvailableSubPledgeSkills(Clan clan)
 	{
 		List<SkillLearn> result = new();
-		foreach (SkillLearn skill  in  _subPledgeSkillTree.values())
+		foreach (SkillLearn skill  in  _subPledgeSkillTree.Values)
 		{
 			if (clan.getLevel() >= skill.getGetLevel() && clan.isLearnableSubSkill(skill.getSkillId(), skill.getSkillLevel()))
 			{
-				result.add(skill);
+				result.Add(skill);
 			}
 		}
 		return result;
@@ -1116,12 +1116,12 @@ public class SkillTreeData: DataReaderBase
 	public List<SkillLearn> getAvailableSubClassSkills(Player player)
 	{
 		List<SkillLearn> result = new();
-		foreach (SkillLearn skill  in  _subClassSkillTree.values())
+		foreach (SkillLearn skill  in  _subClassSkillTree.Values)
 		{
 			Skill oldSkill = player.getSkills().get(skill.getSkillId());
 			if ((oldSkill == null && skill.getSkillLevel() == 1) || (oldSkill != null && oldSkill.getLevel() == skill.getSkillLevel() - 1))
 			{
-				result.add(skill);
+				result.Add(skill);
 			}
 		}
 		return result;
@@ -1135,12 +1135,12 @@ public class SkillTreeData: DataReaderBase
 	public List<SkillLearn> getAvailableDualClassSkills(Player player)
 	{
 		List<SkillLearn> result = new();
-		foreach (SkillLearn skill  in  _dualClassSkillTree.values())
+		foreach (SkillLearn skill  in  _dualClassSkillTree.Values)
 		{
 			Skill oldSkill = player.getSkills().get(skill.getSkillId());
 			if ((oldSkill == null && skill.getSkillLevel() == 1) || (oldSkill != null && oldSkill.getLevel() == skill.getSkillLevel() - 1))
 			{
-				result.add(skill);
+				result.Add(skill);
 			}
 		}
 
@@ -1156,11 +1156,11 @@ public class SkillTreeData: DataReaderBase
 	public List<SkillLearn> getAvailableResidentialSkills(int residenceId)
 	{
 		List<SkillLearn> result = new();
-		foreach (SkillLearn skill  in  _pledgeSkillTree.values())
+		foreach (SkillLearn skill  in  _pledgeSkillTree.Values)
 		{
 			if (skill.isResidencialSkill() && skill.getResidenceIds().Contains(residenceId))
 			{
-				result.add(skill);
+				result.Add(skill);
 			}
 		}
 		return result;
@@ -1421,13 +1421,13 @@ public class SkillTreeData: DataReaderBase
 	public int getMinLevelForNewSkill(Player player, Map<long, SkillLearn> skillTree)
 	{
 		int minLevel = 0;
-		if (skillTree.isEmpty())
+		if (skillTree.Count == 0)
 		{
 			_logger.Warn(GetType().Name + ": SkillTree is not defined for getMinLevelForNewSkill!");
 		}
 		else
 		{
-			foreach (SkillLearn s  in  skillTree.values())
+			foreach (SkillLearn s  in  skillTree.Values)
 			{
 				if (player.getLevel() < s.getGetLevel() && (minLevel == 0 || minLevel > s.getGetLevel()))
 				{
@@ -1441,8 +1441,8 @@ public class SkillTreeData: DataReaderBase
 	public ICollection<SkillLearn> getNextAvailableSkills(Player player, CharacterClass classId, bool includeByFs, bool includeAutoGet)
 	{
 		Map<long, SkillLearn> completeClassSkillTree = getCompleteClassSkillTree(classId);
-		Set<SkillLearn> result = new();
-		if (completeClassSkillTree.isEmpty())
+		Set<SkillLearn> result = [];
+		if (completeClassSkillTree.Count == 0)
 		{
 			return result;
 		}
@@ -1450,7 +1450,7 @@ public class SkillTreeData: DataReaderBase
 		int minLevelForNewSkill = getMinLevelForNewSkill(player, completeClassSkillTree);
 		if (minLevelForNewSkill > 0)
 		{
-			foreach (SkillLearn skill  in  completeClassSkillTree.values())
+			foreach (SkillLearn skill  in  completeClassSkillTree.Values)
 			{
 				if (skill.getGetLevel() > Config.PLAYER_MAXIMUM_LEVEL)
 				{
@@ -1589,7 +1589,7 @@ public class SkillTreeData: DataReaderBase
 	
 	public bool isAlchemySkill(int skillId, int skillLevel)
 	{
-		return _alchemySkillTree.containsKey(SkillData.getSkillHashCode(skillId, skillLevel));
+		return _alchemySkillTree.ContainsKey(SkillData.getSkillHashCode(skillId, skillLevel));
 	}
 	
 	/**
@@ -1600,7 +1600,7 @@ public class SkillTreeData: DataReaderBase
 	 */
 	public bool isHeroSkill(int skillId, int skillLevel)
 	{
-		return _heroSkillTree.containsKey(SkillData.getSkillHashCode(skillId, skillLevel));
+		return _heroSkillTree.ContainsKey(SkillData.getSkillHashCode(skillId, skillLevel));
 	}
 	
 	/**
@@ -1612,7 +1612,7 @@ public class SkillTreeData: DataReaderBase
 	public bool isGMSkill(int skillId, int skillLevel)
 	{
 		long hashCode = SkillData.getSkillHashCode(skillId, skillLevel);
-		return _gameMasterSkillTree.containsKey(hashCode) || _gameMasterAuraSkillTree.containsKey(hashCode);
+		return _gameMasterSkillTree.ContainsKey(hashCode) || _gameMasterAuraSkillTree.ContainsKey(hashCode);
 	}
 	
 	/**
@@ -1624,22 +1624,22 @@ public class SkillTreeData: DataReaderBase
 	public bool isClanSkill(int skillId, int skillLevel)
 	{
 		long hashCode = SkillData.getSkillHashCode(skillId, skillLevel);
-		return _pledgeSkillTree.containsKey(hashCode) || _subPledgeSkillTree.containsKey(hashCode);
+		return _pledgeSkillTree.ContainsKey(hashCode) || _subPledgeSkillTree.ContainsKey(hashCode);
 	}
 	
 	public bool isRemoveSkill(CharacterClass classId, int skillId)
 	{
-		return _removeSkillCache.getOrDefault(classId, new()).Contains(skillId);
+		return _removeSkillCache.GetValueOrDefault(classId)?.Contains(skillId) ?? false;
 	}
 	
 	public bool isCurrentClassSkillNoParent(CharacterClass classId, long hashCode)
 	{
-		return _classSkillTrees.getOrDefault(classId, new()).containsKey(hashCode);
+		return _classSkillTrees.GetValueOrDefault(classId)?.ContainsKey(hashCode) ?? false;
 	}
 	
 	public bool isAwakenSaveSkill(CharacterClass classId, int skillId)
 	{
-		return _awakeningSaveSkillTree.getOrDefault(classId, new()).Contains(skillId);
+		return _awakeningSaveSkillTree.GetValueOrDefault(classId)?.Contains(skillId) ?? false;
 	}
 	
 	/**
@@ -1649,7 +1649,7 @@ public class SkillTreeData: DataReaderBase
 	 */
 	public void addSkills(Player gmchar, bool auraSkills)
 	{
-		ICollection<SkillLearn> skills = auraSkills ? _gameMasterAuraSkillTree.values() : _gameMasterSkillTree.values();
+		ICollection<SkillLearn> skills = auraSkills ? _gameMasterAuraSkillTree.Values : _gameMasterSkillTree.Values;
 		SkillData st = SkillData.getInstance();
 		foreach (SkillLearn sl  in  skills)
 		{
@@ -1672,12 +1672,12 @@ public class SkillTreeData: DataReaderBase
 		{
 			i = 0;
 			tempMap = getCompleteClassSkillTree(cls);
-			array = new long[tempMap.size()];
+			array = new long[tempMap.Count];
 			foreach (long h  in  tempMap.Keys)
 			{
 				array[i++] = h;
 			}
-			tempMap.clear();
+			tempMap.Clear();
 			Array.Sort(array);
 			_skillsByClassIdHashCodes.put(cls, array);
 		}
@@ -1687,24 +1687,24 @@ public class SkillTreeData: DataReaderBase
 		_skillsByRaceHashCodes = new();
 		foreach (Race r  in  EnumUtil.GetValues<Race>())
 		{
-			foreach (SkillLearn s in  _fishingSkillTree.values())
+			foreach (SkillLearn s in  _fishingSkillTree.Values)
 			{
 				if (s.getRaces().Contains(r))
 				{
-					list.add(SkillData.getSkillHashCode(s.getSkillId(), s.getSkillLevel()));
+					list.Add(SkillData.getSkillHashCode(s.getSkillId(), s.getSkillLevel()));
 				}
 			}
 			
-			foreach (SkillLearn s  in  _transformSkillTree.values())
+			foreach (SkillLearn s  in  _transformSkillTree.Values)
 			{
 				if (s.getRaces().Contains(r))
 				{
-					list.add(SkillData.getSkillHashCode(s.getSkillId(), s.getSkillLevel()));
+					list.Add(SkillData.getSkillHashCode(s.getSkillId(), s.getSkillLevel()));
 				}
 			}
 			
 			i = 0;
-			array = new long[list.size()];
+			array = new long[list.Count];
 			foreach (long s  in  list)
 			{
 				array[i++] = s;
@@ -1716,46 +1716,46 @@ public class SkillTreeData: DataReaderBase
 		}
 		
 		// Skills available for all classes and races
-		foreach (SkillLearn s  in  _commonSkillTree.values())
+		foreach (SkillLearn s  in  _commonSkillTree.Values)
 		{
 			if (s.getRaces().isEmpty())
 			{
-				list.add(SkillData.getSkillHashCode(s.getSkillId(), s.getSkillLevel()));
+				list.Add(SkillData.getSkillHashCode(s.getSkillId(), s.getSkillLevel()));
 			}
 		}
 		
-		foreach (SkillLearn s  in  _fishingSkillTree.values())
+		foreach (SkillLearn s  in  _fishingSkillTree.Values)
 		{
 			if (s.getRaces().isEmpty())
 			{
-				list.add(SkillData.getSkillHashCode(s.getSkillId(), s.getSkillLevel()));
+				list.Add(SkillData.getSkillHashCode(s.getSkillId(), s.getSkillLevel()));
 			}
 		}
 		
-		foreach (SkillLearn s  in  _transformSkillTree.values())
+		foreach (SkillLearn s  in  _transformSkillTree.Values)
 		{
 			if (s.getRaces().isEmpty())
 			{
-				list.add(SkillData.getSkillHashCode(s.getSkillId(), s.getSkillLevel()));
+				list.Add(SkillData.getSkillHashCode(s.getSkillId(), s.getSkillLevel()));
 			}
 		}
 		
-		foreach (SkillLearn s  in  _collectSkillTree.values())
+		foreach (SkillLearn s  in  _collectSkillTree.Values)
 		{
-			list.add(SkillData.getSkillHashCode(s.getSkillId(), s.getSkillLevel()));
+			list.Add(SkillData.getSkillHashCode(s.getSkillId(), s.getSkillLevel()));
 		}
 		
-		foreach (SkillLearn s  in  _abilitySkillTree.values())
+		foreach (SkillLearn s  in  _abilitySkillTree.Values)
 		{
-			list.add(SkillData.getSkillHashCode(s.getSkillId(), s.getSkillLevel()));
+			list.Add(SkillData.getSkillHashCode(s.getSkillId(), s.getSkillLevel()));
 		}
 		
-		foreach (SkillLearn s  in  _alchemySkillTree.values())
+		foreach (SkillLearn s  in  _alchemySkillTree.Values)
 		{
-			list.add(SkillData.getSkillHashCode(s.getSkillId(), s.getSkillLevel()));
+			list.Add(SkillData.getSkillHashCode(s.getSkillId(), s.getSkillLevel()));
 		}
 		
-		_allSkillsHashCodes = new long[list.size()];
+		_allSkillsHashCodes = new long[list.Count];
 		int j = 0;
 		foreach (long hashcode  in  list)
 		{
@@ -1827,31 +1827,31 @@ public class SkillTreeData: DataReaderBase
 	private void report()
 	{
 		int classSkillTreeCount = 0;
-		foreach (Map<long, SkillLearn> classSkillTree  in  _classSkillTrees.values())
+		foreach (Map<long, SkillLearn> classSkillTree  in  _classSkillTrees.Values)
 		{
-			classSkillTreeCount += classSkillTree.size();
+			classSkillTreeCount += classSkillTree.Count;
 		}
 		
 		int transferSkillTreeCount = 0;
-		foreach (Map<long, SkillLearn> trasferSkillTree  in  _transferSkillTrees.values())
+		foreach (Map<long, SkillLearn> trasferSkillTree  in  _transferSkillTrees.Values)
 		{
-			transferSkillTreeCount += trasferSkillTree.size();
+			transferSkillTreeCount += trasferSkillTree.Count;
 		}
 		
 		int raceSkillTreeCount = 0;
-		foreach (Map<long, SkillLearn> raceSkillTree  in  _raceSkillTree.values())
+		foreach (Map<long, SkillLearn> raceSkillTree  in  _raceSkillTree.Values)
 		{
-			raceSkillTreeCount += raceSkillTree.size();
+			raceSkillTreeCount += raceSkillTree.Count;
 		}
 		
 		int revelationSkillTreeCount = 0;
-		foreach (Map<long, SkillLearn> revelationSkillTree  in  _revelationSkillTree.values())
+		foreach (Map<long, SkillLearn> revelationSkillTree  in  _revelationSkillTree.Values)
 		{
-			revelationSkillTreeCount += revelationSkillTree.size();
+			revelationSkillTreeCount += revelationSkillTree.Count;
 		}
 		
 		int dwarvenOnlyFishingSkillCount = 0;
-		foreach (SkillLearn fishSkill  in  _fishingSkillTree.values())
+		foreach (SkillLearn fishSkill  in  _fishingSkillTree.Values)
 		{
 			if (fishSkill.getRaces().Contains(Race.DWARF))
 			{
@@ -1860,7 +1860,7 @@ public class SkillTreeData: DataReaderBase
 		}
 		
 		int resSkillCount = 0;
-		foreach (SkillLearn pledgeSkill  in  _pledgeSkillTree.values())
+		foreach (SkillLearn pledgeSkill  in  _pledgeSkillTree.Values)
 		{
 			if (pledgeSkill.isResidencialSkill())
 			{
@@ -1868,27 +1868,27 @@ public class SkillTreeData: DataReaderBase
 			}
 		}
 		
-		String className = GetType().Name;
-		_logger.Info(className + ": Loaded " + classSkillTreeCount + " Class skills for " + _classSkillTrees.size() + " class skill trees.");
-		_logger.Info(className + ": Loaded " + _subClassSkillTree.size() + " sub-class skills.");
-		_logger.Info(className + ": Loaded " + _dualClassSkillTree.size() + " dual-class skills.");
-		_logger.Info(className + ": Loaded " + transferSkillTreeCount + " transfer skills for " + _transferSkillTrees.size() + " transfer skill trees.");
-		_logger.Info(className + ": Loaded " + raceSkillTreeCount + " race skills for " + _raceSkillTree.size() + " race skill trees.");
-		_logger.Info(className + ": Loaded " + _fishingSkillTree.size() + " fishing skills, " + dwarvenOnlyFishingSkillCount + " Dwarven only fishing skills.");
-		_logger.Info(className + ": Loaded " + _collectSkillTree.size() + " collect skills.");
-		_logger.Info(className + ": Loaded " + _pledgeSkillTree.size() + " clan skills, " + (_pledgeSkillTree.size() - resSkillCount) + " for clan and " + resSkillCount + " residential.");
-		_logger.Info(className + ": Loaded " + _subPledgeSkillTree.size() + " sub-pledge skills.");
-		_logger.Info(className + ": Loaded " + _transformSkillTree.size() + " transform skills.");
-		_logger.Info(className + ": Loaded " + _nobleSkillTree.size() + " noble skills.");
-		_logger.Info(className + ": Loaded " + _heroSkillTree.size() + " hero skills.");
-		_logger.Info(className + ": Loaded " + _gameMasterSkillTree.size() + " game master skills.");
-		_logger.Info(className + ": Loaded " + _gameMasterAuraSkillTree.size() + " game master aura skills.");
-		_logger.Info(className + ": Loaded " + _abilitySkillTree.size() + " ability skills.");
-		_logger.Info(className + ": Loaded " + _alchemySkillTree.size() + " alchemy skills.");
-		_logger.Info(className + ": Loaded " + _awakeningSaveSkillTree.size() + " class awaken save skills.");
+		string className = GetType().Name;
+		_logger.Info(className + ": Loaded " + classSkillTreeCount + " Class skills for " + _classSkillTrees.Count + " class skill trees.");
+		_logger.Info(className + ": Loaded " + _subClassSkillTree.Count + " sub-class skills.");
+		_logger.Info(className + ": Loaded " + _dualClassSkillTree.Count + " dual-class skills.");
+		_logger.Info(className + ": Loaded " + transferSkillTreeCount + " transfer skills for " + _transferSkillTrees.Count + " transfer skill trees.");
+		_logger.Info(className + ": Loaded " + raceSkillTreeCount + " race skills for " + _raceSkillTree.Count + " race skill trees.");
+		_logger.Info(className + ": Loaded " + _fishingSkillTree.Count + " fishing skills, " + dwarvenOnlyFishingSkillCount + " Dwarven only fishing skills.");
+		_logger.Info(className + ": Loaded " + _collectSkillTree.Count + " collect skills.");
+		_logger.Info(className + ": Loaded " + _pledgeSkillTree.Count + " clan skills, " + (_pledgeSkillTree.Count - resSkillCount) + " for clan and " + resSkillCount + " residential.");
+		_logger.Info(className + ": Loaded " + _subPledgeSkillTree.Count + " sub-pledge skills.");
+		_logger.Info(className + ": Loaded " + _transformSkillTree.Count + " transform skills.");
+		_logger.Info(className + ": Loaded " + _nobleSkillTree.Count + " noble skills.");
+		_logger.Info(className + ": Loaded " + _heroSkillTree.Count + " hero skills.");
+		_logger.Info(className + ": Loaded " + _gameMasterSkillTree.Count + " game master skills.");
+		_logger.Info(className + ": Loaded " + _gameMasterAuraSkillTree.Count + " game master aura skills.");
+		_logger.Info(className + ": Loaded " + _abilitySkillTree.Count + " ability skills.");
+		_logger.Info(className + ": Loaded " + _alchemySkillTree.Count + " alchemy skills.");
+		_logger.Info(className + ": Loaded " + _awakeningSaveSkillTree.Count + " class awaken save skills.");
 		_logger.Info(className + ": Loaded " + revelationSkillTreeCount + " Revelation skills.");
 		
-		int commonSkills = _commonSkillTree.size();
+		int commonSkills = _commonSkillTree.Count;
 		if (commonSkills > 0)
 		{
 			_logger.Info(className + ": Loaded " + commonSkills + " common skills.");

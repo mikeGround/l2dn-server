@@ -1,3 +1,4 @@
+using System.Globalization;
 using L2Dn.GameServer.Db;
 using L2Dn.GameServer.Enums;
 using L2Dn.GameServer.Model;
@@ -33,29 +34,31 @@ public class CustomMailManager
 					if (player != null && player.isOnline())
 					{
 						// Create message.
-						String items = record.Items;
+						string items = record.Items;
 						Message msg = new Message(playerId, record.Subject, record.Message, items.Length > 0 ? MailType.PRIME_SHOP_GIFT : MailType.REGULAR);
 						List<ItemEnchantHolder> itemHolders = new();
-						foreach (String str in items.Split(";"))
+						foreach (string str in items.Split(";"))
 						{
 							if (str.Contains(' '))
 							{
 								string[] split = str.Split(" ");
-								String itemId = split[0];
-								String itemCount = split[1];
-								string enchant = split.Length > 2 ? split[2] : "0";
-								if (Util.isDigit(itemId) && Util.isDigit(itemCount))
+								string itemIdStr = split[0];
+								string itemCountStr = split[1];
+								string enchantStr = split.Length > 2 ? split[2] : "0";
+								if (int.TryParse(itemIdStr, CultureInfo.InvariantCulture, out int itemId) &&
+								    long.TryParse(itemCountStr, CultureInfo.InvariantCulture, out long itemCount) &&
+								    int.TryParse(enchantStr, CultureInfo.InvariantCulture, out int enchant))
 								{
-									itemHolders.add(new ItemEnchantHolder(int.Parse(itemId), long.Parse(itemCount), int.Parse(enchant)));
+									itemHolders.Add(new ItemEnchantHolder(itemId, itemCount, enchant));
 								}
 							}
-							else if (Util.isDigit(str))
+							else if (int.TryParse(str, CultureInfo.InvariantCulture, out int itemId))
 							{
-								itemHolders.add(new ItemEnchantHolder(int.Parse(str), 1));
+								itemHolders.Add(new ItemEnchantHolder(itemId, 1));
 							}
 						}
 						
-						if (!itemHolders.isEmpty())
+						if (itemHolders.Count != 0)
 						{
 							Mail attachments = msg.createAttachments();
 							foreach (ItemEnchantHolder itemHolder in itemHolders)

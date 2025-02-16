@@ -16,7 +16,7 @@ public readonly struct ExOlympiadHeroAndLegendInfoPacket: IOutgoingPacket
 	{
 		writer.WritePacketCode(OutgoingPacketCodes.EX_OLYMPIAD_HERO_AND_LEGEND_INFO);
 		
-		if (!Hero.getInstance().getHeroes().isEmpty())
+		if (Hero.getInstance().getHeroes().Count != 0)
 		{
 			try
 			{
@@ -71,11 +71,11 @@ public readonly struct ExOlympiadHeroAndLegendInfoPacket: IOutgoingPacket
 					{
 						if (!wroteCount)
 						{
-							writer.WriteInt32(Hero.getInstance().getHeroes().size() - 1);
+							writer.WriteInt32(Hero.getInstance().getHeroes().Count - 1);
 							wroteCount = true;
 						}
 
-						if (Hero.getInstance().getHeroes().size() > 1)
+						if (Hero.getInstance().getHeroes().Count > 1)
 						{
 							writer.WriteSizedString(record.Name);
 							writer.WriteSizedString(clan?.getName() ?? string.Empty);

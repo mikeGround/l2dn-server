@@ -5,9 +5,9 @@ namespace L2Dn.GameServer.Network.OutgoingPackets;
 
 public readonly struct PackageToListPacket: IOutgoingPacket
 {
-    private readonly Map<int, String> _players;
+    private readonly Map<int, string> _players;
 	
-    public PackageToListPacket(Map<int, String> chars)
+    public PackageToListPacket(Map<int, string> chars)
     {
         _players = chars;
     }
@@ -16,7 +16,7 @@ public readonly struct PackageToListPacket: IOutgoingPacket
     {
         writer.WritePacketCode(OutgoingPacketCodes.PACKAGE_TO_LIST);
         
-        writer.WriteInt32(_players.size());
+        writer.WriteInt32(_players.Count);
         foreach (var entry in _players)
         {
             writer.WriteInt32(entry.Key);

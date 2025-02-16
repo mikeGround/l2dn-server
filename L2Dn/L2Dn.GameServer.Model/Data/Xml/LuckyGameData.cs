@@ -23,12 +23,12 @@ public class LuckyGameData: DataReaderBase
 	
 	public void load()
 	{
-		_luckyGame.clear();
+		_luckyGame.Clear();
 		
 		XDocument document = LoadXmlDocument(DataFileLocation.Data, "LuckyGameData.xml");
 		document.Elements("list").Elements("luckygame").ForEach(parseElement);
 		
-		LOGGER.Info(GetType().Name + ": Loaded " + _luckyGame.size() + " lucky game data.");
+		LOGGER.Info(GetType().Name + ": Loaded " + _luckyGame.Count + " lucky game data.");
 	}
 	
 	private void parseElement(XElement element)
@@ -73,7 +73,7 @@ public class LuckyGameData: DataReaderBase
 	
 	public int getLuckyGameCount()
 	{
-		return _luckyGame.size();
+		return _luckyGame.Count;
 	}
 	
 	public LuckyGameDataHolder getLuckyGameDataByIndex(int index)

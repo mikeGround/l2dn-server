@@ -47,15 +47,15 @@ public class RankManager
 	{
 		// Load charIds All
 		_snapshotList = _mainList;
-		_mainList.clear();
+		_mainList.Clear();
 		_snapshotOlyList = _mainOlyList;
-		_mainOlyList.clear();
+		_mainOlyList.Clear();
 		_snapshotPvpList = _mainPvpList;
-		_mainPvpList.clear();
+		_mainPvpList.Clear();
 		_snapshotPetList = _mainPetList;
-		_mainPetList.clear();
+		_mainPetList.Clear();
 		_snapshotClanList = _mainClanList;
-		_mainClanList.clear();
+		_mainClanList.Clear();
 		
 		try 
 		{
@@ -151,9 +151,8 @@ public class RankManager
 				player.set("competitions_lost", record.CompetitionsLost);
 				player.set("olympiad_points", record.OlympiadPoints);
 					
-				if (Hero.getInstance().getCompleteHeroes().containsKey(charId))
+				if (Hero.getInstance().getCompleteHeroes().TryGetValue(charId, out StatSet? hero))
 				{
-					StatSet hero = Hero.getInstance().getCompleteHeroes().get(charId);
 					player.set("count", hero.getInt("count", 0));
 					player.set("legend_count", hero.getInt("legend_count", 0));
 				}
@@ -455,7 +454,7 @@ public class RankManager
 	public int getPlayerRaceRank(Player player)
 	{
 		int playerOid = player.getObjectId();
-		foreach (StatSet stats in _mainList.values())
+		foreach (StatSet stats in _mainList.Values)
 		{
 			if (stats.getInt("charId") != playerOid)
 			{
@@ -469,7 +468,7 @@ public class RankManager
 	public int getPlayerClassRank(Player player)
 	{
 		int playerOid = player.getObjectId();
-		foreach (StatSet stats in _mainList.values())
+		foreach (StatSet stats in _mainList.Values)
 		{
 			if (stats.getInt("charId") != playerOid)
 			{
@@ -490,7 +489,7 @@ public class RankManager
 			{
 				break;
 			}
-			result.add(rank.getInt("charId"));
+			result.Add(rank.getInt("charId"));
 		}
 		return result;
 	}

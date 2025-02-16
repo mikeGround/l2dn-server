@@ -26,12 +26,12 @@ public class TeleportListData: DataReaderBase
 	
 	public void load()
 	{
-		_teleports.clear();
+		_teleports.Clear();
 		
 		XDocument document = LoadXmlDocument(DataFileLocation.Data, "TeleportListData.xml");
 		document.Elements("list").Elements("teleport").ForEach(parseElement);
 		
-		_teleportCount = _teleports.size();
+		_teleportCount = _teleports.Count;
 		LOGGER.Info(GetType().Name + ": Loaded " + _teleportCount + " teleports.");
 	}
 
@@ -49,7 +49,7 @@ public class TeleportListData: DataReaderBase
 			locations.Add(new Location3D(x, y, z));
 		});
 
-		if (locations.isEmpty())
+		if (locations.Count == 0)
 		{
 			int x = element.GetAttributeValueAsInt32("x");
 			int y = element.GetAttributeValueAsInt32("y");

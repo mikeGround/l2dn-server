@@ -13,25 +13,10 @@ public class Map<TKey, TValue>: ConcurrentDictionary<TKey, TValue>
     {
     }
 
-    public bool contains(TKey key)
-    {
-        return ContainsKey(key);
-    }
-    
-    public ICollection<TValue> values()
-    {
-        return Values;
-    }
-    
     public TValue? get(TKey key)
     {
         TryGetValue(key, out var value);
         return value;
-    }
-
-    public bool isEmpty()
-    {
-        return Count == 0;
     }
 
     public TValue? remove(TKey key)
@@ -55,26 +40,6 @@ public class Map<TKey, TValue>: ConcurrentDictionary<TKey, TValue>
         }
     }
 
-    public bool containsKey(TKey key)
-    {
-        return ContainsKey(key);
-    }
-
-    public void clear()
-    {
-        Clear();
-    }
-
-    public int size()
-    {
-        return Count;
-    }
-
-    public bool containsValue(TValue value)
-    {
-        return Values.Contains(value);
-    }
-
     public string toString()
     {
         // TODO:
@@ -84,13 +49,6 @@ public class Map<TKey, TValue>: ConcurrentDictionary<TKey, TValue>
     public TValue computeIfAbsent(TKey key, Func<TKey, TValue> factory)
     {
         return GetOrAdd(key, factory);
-    }
-
-    public TValue getOrDefault(TKey key, TValue defaultValue)
-    {
-        if (TryGetValue(key, out var value))
-            return value;
-        return defaultValue;
     }
 
     public TResult computeIfPresent<TResult>(TKey key, Func<TKey, TValue, TResult> func)
@@ -114,7 +72,7 @@ public class Map<TKey, TValue>: ConcurrentDictionary<TKey, TValue>
 
     public void replace(TKey key, TValue newValue)
     {
-        if (containsKey(key))
+        if (ContainsKey(key))
             this[key] = newValue;
     }
 

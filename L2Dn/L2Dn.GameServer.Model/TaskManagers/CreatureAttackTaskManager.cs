@@ -26,7 +26,7 @@ public sealed class CreatureAttackTaskManager
 	{
 		public void run()
 		{
-			if (creatureAttackData.isEmpty())
+			if (creatureAttackData.Count == 0)
 				return;
 			
 			DateTime currentTime = DateTime.UtcNow;
@@ -64,7 +64,7 @@ public sealed class CreatureAttackTaskManager
 	{
 		public void run()
 		{
-			if (creatureFinishData.isEmpty())
+			if (creatureFinishData.Count == 0)
 				return;
 			
 			DateTime currentTime = DateTime.UtcNow;
@@ -104,7 +104,7 @@ public sealed class CreatureAttackTaskManager
 		
 		foreach (Map<Creature, ScheduledAttack> pool in ATTACK_POOLS)
 		{
-			if (pool.size() < POOL_SIZE)
+			if (pool.Count < POOL_SIZE)
 			{
 				pool.put(creature, scheduledAttack);
 				return;
@@ -123,7 +123,7 @@ public sealed class CreatureAttackTaskManager
 		
 		foreach (Map<Creature, ScheduledFinish> pool in FINISH_POOLS)
 		{
-			if (pool.size() < POOL_SIZE)
+			if (pool.Count < POOL_SIZE)
 			{
 				pool.put(creature, scheduledFinish);
 				return;

@@ -1,5 +1,6 @@
 using System.Collections.Immutable;
 using L2Dn.Events;
+using L2Dn.Extensions;
 using L2Dn.GameServer.Enums;
 using L2Dn.GameServer.InstanceManagers;
 using L2Dn.GameServer.Model.Actor;
@@ -148,7 +149,7 @@ public class InstanceTemplate: IIdentifiable, INamable, IEventContainerProvider
 	 */
 	public void setParameters(Map<string, object> set)
 	{
-		if (!set.isEmpty())
+		if (set.Count != 0)
 		{
 			_parameters = new StatSet(set);
 		}
@@ -494,7 +495,7 @@ public class InstanceTemplate: IIdentifiable, INamable, IEventContainerProvider
 		// Make list of affected playable objects
 		List<Playable> affected = new();
 		affected.Add(player);
-		player.getServitors().values().forEach(x => affected.add(x));
+		player.getServitors().Values.ForEach(x => affected.Add(x));
 		if (player.hasPet())
 		{
 			affected.Add(player.getPet());
@@ -684,7 +685,7 @@ public class InstanceTemplate: IIdentifiable, INamable, IEventContainerProvider
 			{
 				if (member != player)
 				{
-					group.add(member);
+					group.Add(member);
 				}
 			}
 		}

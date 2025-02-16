@@ -27,15 +27,15 @@ public class PrimeShopData: DataReaderBase
 	
 	public void load()
 	{
-		_primeItems.clear();
+		_primeItems.Clear();
 		
 		XDocument document = LoadXmlDocument(DataFileLocation.Data, "PrimeShop.xml");
 		document.Elements("list").Where(el => el.Attribute("enabled").GetBoolean(false)).Elements("item")
 			.ForEach(parseElement);
 		
-		if (!_primeItems.isEmpty())
+		if (_primeItems.Count != 0)
 		{
-			LOGGER.Info(GetType().Name + ": Loaded " + _primeItems.size() + " items.");
+			LOGGER.Info(GetType().Name + ": Loaded " + _primeItems.Count + " items.");
 		}
 		else
 		{
@@ -59,7 +59,7 @@ public class PrimeShopData: DataReaderBase
 				return;
 			}
 
-			items.add(new PrimeShopItem(itemId, count, item.getWeight(), item.isTradeable() ? 1 : 0));
+			items.Add(new PrimeShopItem(itemId, count, item.getWeight(), item.isTradeable() ? 1 : 0));
 		});
 
 		_primeItems.put(id, new PrimeShopGroup(element, items));

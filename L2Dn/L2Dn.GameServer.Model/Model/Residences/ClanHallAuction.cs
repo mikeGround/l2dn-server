@@ -17,9 +17,9 @@ public class ClanHallAuction
 	private static readonly Logger LOGGER = LogManager.GetLogger(nameof(ClanHallAuction));
 	
 	private readonly int _clanHallId;
-	private const String DELETE_CLANHALL_BIDDERS = "DELETE FROM clanhall_auctions_bidders WHERE clanHallId=?";
-	private const String INSERT_CLANHALL_BIDDER = "REPLACE INTO clanhall_auctions_bidders (clanHallId, clanId, bid, bidTime) VALUES (?,?,?,?)";
-	private const String DELETE_CLANHALL_BIDDER = "DELETE FROM clanhall_auctions_bidders WHERE clanId=?";
+	private const string DELETE_CLANHALL_BIDDERS = "DELETE FROM clanhall_auctions_bidders WHERE clanHallId=?";
+	private const string INSERT_CLANHALL_BIDDER = "REPLACE INTO clanhall_auctions_bidders (clanHallId, clanId, bid, bidTime) VALUES (?,?,?,?)";
+	private const string DELETE_CLANHALL_BIDDER = "DELETE FROM clanhall_auctions_bidders WHERE clanId=?";
 	
 	public ClanHallAuction(int clanHallId)
 	{
@@ -110,7 +110,7 @@ public class ClanHallAuction
 	{
 		ClanHall clanHall = ClanHallData.getInstance().getClanHallById(_clanHallId);
 		if (getBids().Count != 0)
-			return getBids().values().Select(b => b.getBid()).Max();
+			return getBids().Values.Select(b => b.getBid()).Max();
 		return clanHall.getMinBid();
 	}
 
@@ -121,12 +121,12 @@ public class ClanHallAuction
 	
 	public Bidder? getHighestBidder()
 	{
-		return getBids().values().MaxBy(x => x.getBid());
+		return getBids().Values.MaxBy(x => x.getBid());
 	}
 	
 	public int getBidCount()
 	{
-		return getBids().values().Count;
+		return getBids().Values.Count;
 	}
 	
 	public void returnAdenas(Bidder bidder)
@@ -142,7 +142,7 @@ public class ClanHallAuction
 			Bidder highestBidder = potentialHighestBidder;
 			ClanHall clanHall = ClanHallData.getInstance().getClanHallById(_clanHallId);
 			clanHall.setOwner(highestBidder.getClan());
-			getBids().clear();
+			getBids().Clear();
 			
 			try 
 			{

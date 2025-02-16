@@ -1,3 +1,4 @@
+using System.Globalization;
 using L2Dn.GameServer.Data.Sql;
 using L2Dn.GameServer.Data.Xml;
 using L2Dn.GameServer.Handlers;
@@ -12,7 +13,7 @@ namespace L2Dn.GameServer.Scripts.Handlers.VoicedCommandHandlers;
 
 public class ChatAdmin: IVoicedCommandHandler
 {
-	private static readonly String[] VOICED_COMMANDS =
+	private static readonly string[] VOICED_COMMANDS =
 	{
 		"banchat",
 		"chatban",
@@ -20,7 +21,7 @@ public class ChatAdmin: IVoicedCommandHandler
 		"chatunban"
 	};
 	
-	public bool useVoicedCommand(String command, Player activeChar, String @params)
+	public bool useVoicedCommand(string command, Player activeChar, string @params)
 	{
 		if (!AdminData.getInstance().hasAccess(command, activeChar.getAccessLevel()))
 		{
@@ -41,14 +42,14 @@ public class ChatAdmin: IVoicedCommandHandler
                 StringTokenizer st = new StringTokenizer(@params);
 				if (st.hasMoreTokens())
 				{
-					String name = st.nextToken();
+					string name = st.nextToken();
 					long expirationTime = 0;
 					if (st.hasMoreTokens())
 					{
-						String token = st.nextToken();
-						if (Util.isDigit(token))
+						string token = st.nextToken();
+						if (int.TryParse(token, CultureInfo.InvariantCulture, out int value))
 						{
-							expirationTime = int.Parse(token);
+							expirationTime = value;
 						}
 					}
 					
@@ -118,7 +119,7 @@ public class ChatAdmin: IVoicedCommandHandler
                 StringTokenizer st = new StringTokenizer(@params);
 				if (st.hasMoreTokens())
 				{
-					String name = st.nextToken();
+					string name = st.nextToken();
 					int objId = CharInfoTable.getInstance().getIdByName(name);
 					if (objId > 0)
 					{
@@ -151,7 +152,7 @@ public class ChatAdmin: IVoicedCommandHandler
 		return true;
 	}
 	
-	public String[] getVoicedCommandList()
+	public string[] getVoicedCommandList()
 	{
 		return VOICED_COMMANDS;
 	}

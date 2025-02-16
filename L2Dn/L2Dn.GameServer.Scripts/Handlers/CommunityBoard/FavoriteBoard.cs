@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text;
 using L2Dn.GameServer.Cache;
 using L2Dn.GameServer.Db;
@@ -17,25 +18,25 @@ public class FavoriteBoard: IParseBoardHandler
 {
     private static readonly Logger _logger = LogManager.GetLogger(nameof(FavoriteBoard));
 	
-	private static readonly String[] COMMANDS =
+	private static readonly string[] COMMANDS =
 	{
 		"_bbsgetfav",
 		"bbs_add_fav",
 		"_bbsdelfav_"
 	};
 	
-	public String[] getCommunityBoardCommands()
+	public string[] getCommunityBoardCommands()
 	{
 		return COMMANDS;
 	}
 	
-	public bool parseCommunityBoardCommand(String command, Player player)
+	public bool parseCommunityBoardCommand(string command, Player player)
 	{
 		// None of this commands can be added to favorites.
 		if (command.startsWith("_bbsgetfav"))
 		{
 			// Load Favorite links
-			String list = HtmCache.getInstance().getHtm("html/CommunityBoard/favorite_list.html", player.getLang());
+			string list = HtmCache.getInstance().getHtm("html/CommunityBoard/favorite_list.html", player.getLang());
 			StringBuilder sb = new StringBuilder();
 			try
             {
@@ -47,14 +48,14 @@ public class FavoriteBoard: IParseBoardHandler
                 
 				foreach (DbBbsFavorite record in query)
 				{
-					String link = list.Replace("%fav_bypass%", record.ByPass);
+					string link = list.Replace("%fav_bypass%", record.ByPass);
 					link = link.Replace("%fav_title%", record.Title);
 					link = link.Replace("%fav_add_date%", record.Created.ToString("yyyy-MM-dd HH:mm:ss"));
 					link = link.Replace("%fav_id%", record.Id.ToString());
 					sb.Append(link);
 				}
 
-                String html = HtmCache.getInstance().getHtm("html/CommunityBoard/favorite.html", player.getLang());
+                string html = HtmCache.getInstance().getHtm("html/CommunityBoard/favorite.html", player.getLang());
 				html = html.Replace("%fav_list%", sb.ToString());
 				CommunityBoardHandler.separateAndSend(html, player);
 			}
@@ -65,10 +66,10 @@ public class FavoriteBoard: IParseBoardHandler
 		}
 		else if (command.startsWith("bbs_add_fav"))
 		{
-			String bypass = CommunityBoardHandler.getInstance().removeBypass(player);
+			string bypass = CommunityBoardHandler.getInstance().removeBypass(player);
 			if (bypass != null)
 			{
-				String[] parts = bypass.Split("&", 2);
+				string[] parts = bypass.Split("&", 2);
 				if (parts.Length != 2)
 				{
 					_logger.Warn(nameof(FavoriteBoard) + ": Couldn't add favorite link, " + bypass + " it's not a valid bypass!");
@@ -99,8 +100,8 @@ public class FavoriteBoard: IParseBoardHandler
 		}
 		else if (command.startsWith("_bbsdelfav_"))
 		{
-			String favId = command.Replace("_bbsdelfav_", "");
-			if (!Util.isDigit(favId))
+			string favId = command.Replace("_bbsdelfav_", "");
+			if (!int.TryParse(favId, CultureInfo.InvariantCulture, out int id))
 			{
                 _logger.Warn(nameof(FavoriteBoard) + ": Couldn't delete favorite link, " + favId + " it's not a valid ID!");
 				return false;
@@ -109,7 +110,6 @@ public class FavoriteBoard: IParseBoardHandler
 			try
             {
                 int playerId = player.getObjectId();
-                int id = int.Parse(favId);
                 using GameServerDbContext ctx = DbFactory.Instance.CreateDbContext();
                 ctx.BbsFavorites.Where(r => r.Id == id && r.PlayerId == playerId).ExecuteDelete();
 

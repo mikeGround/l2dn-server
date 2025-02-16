@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using L2Dn.Extensions;
 using L2Dn.GameServer.AI;
 using L2Dn.GameServer.Enums;
 using L2Dn.GameServer.InstanceManagers;
@@ -224,7 +225,7 @@ public abstract class AbstractOlympiadGame
 					pet.unSummon(player);
 				}
 				
-				player.getServitors().values().forEach(s =>
+				player.getServitors().Values.ForEach(s =>
 				{
 					s.stopAllEffectsExceptThoseThatLastThroughDeath();
 					s.getEffectList().stopEffects(info => info.getSkill().isBlockedInOlympiad(), true, true);
@@ -307,7 +308,7 @@ public abstract class AbstractOlympiadGame
 				pet.getEffectList().stopEffects(info => info.getSkill().isBlockedInOlympiad(), true, true);
 			}
 			
-			foreach (Summon s in player.getServitors().values())
+			foreach (Summon s in player.getServitors().Values)
 			{
 				if (!s.isDead())
 				{
@@ -412,7 +413,7 @@ public abstract class AbstractOlympiadGame
 		try
 		{
 			List<ItemInfo> items = new List<ItemInfo>();
-			list.forEach(holder =>
+			list.ForEach(holder =>
 			{
 				Item item = player.getInventory().addItem("Olympiad", holder.getId(), holder.getCount(), player, null);
 				if (item == null)
@@ -420,7 +421,7 @@ public abstract class AbstractOlympiadGame
 					return;
 				}
 
-				items.add(new ItemInfo(item, ItemChangeType.MODIFIED));
+				items.Add(new ItemInfo(item, ItemChangeType.MODIFIED));
 				SystemMessagePacket sm = new SystemMessagePacket(SystemMessageId.YOU_HAVE_OBTAINED_S1_X_S2);
 				sm.Params.addItemName(item);
 				sm.Params.addLong(holder.getCount());

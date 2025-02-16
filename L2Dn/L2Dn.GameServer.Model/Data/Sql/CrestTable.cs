@@ -28,7 +28,7 @@ public class CrestTable
 	[MethodImpl(MethodImplOptions.Synchronized)]
 	public void load()
 	{
-		_crests.clear();
+		_crests.Clear();
 		Set<int> crestsInUse = new();
 		foreach (Clan clan in ClanTable.getInstance().getClans())
 		{
@@ -85,7 +85,7 @@ public class CrestTable
 			LOGGER.Warn("There was an error while loading crests from database:", e);
 		}
 		
-		LOGGER.Info(GetType().Name + ": Loaded " + _crests.size() + " Crests.");
+		LOGGER.Info(GetType().Name + ": Loaded " + _crests.Count + " Crests.");
 		
 		foreach (Clan clan in ClanTable.getInstance().getClans())
 		{

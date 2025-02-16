@@ -470,12 +470,12 @@ public abstract class Inventory: ItemContainer
 			
 			if (update)
 			{
-				foreach (Skill skill in removedSkills.values())
+				foreach (Skill skill in removedSkills.Values)
 				{
 					playable.removeSkill(skill, skill.isPassive());
 				}
 				
-				foreach (Skill skill in addedSkills.values())
+				foreach (Skill skill in addedSkills.Values)
 				{
 					playable.addSkill(skill);
 				}
@@ -798,9 +798,9 @@ public abstract class Inventory: ItemContainer
 				item.getTemplate().forEachSkill(ItemSkillType.ON_EQUIP, holder => holder.getSkill().activateSkill(playable, playable));
 			}
 			
-			if (!addedSkills.isEmpty())
+			if (addedSkills.Count != 0)
 			{
-				foreach (Skill skill in addedSkills.values())
+				foreach (Skill skill in addedSkills.Values)
 				{
 					playable.addSkill(skill);
 				}
@@ -1215,7 +1215,7 @@ public abstract class Inventory: ItemContainer
 	 * @param reference : Object Object referencing current action like NPC selling item or previous item in transformation
 	 * @return Item corresponding to the destroyed item or the updated item in inventory
 	 */
-	public virtual Item dropItem(String process, Item item, Player actor, Object reference)
+	public virtual Item dropItem(string process, Item item, Player actor, object reference)
 	{
 		if (item == null)
 		{
@@ -1249,7 +1249,7 @@ public abstract class Inventory: ItemContainer
 	 * @param reference : Object Object referencing current action like NPC selling item or previous item in transformation
 	 * @return Item corresponding to the destroyed item or the updated item in inventory
 	 */
-	public virtual Item dropItem(String process, int objectId, long count, Player actor, Object reference)
+	public virtual Item dropItem(string process, int objectId, long count, Player actor, object reference)
 	{
 		Item item = getItemByObjectId(objectId);
 		if (item == null)

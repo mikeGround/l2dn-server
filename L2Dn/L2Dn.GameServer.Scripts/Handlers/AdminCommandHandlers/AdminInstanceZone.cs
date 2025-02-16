@@ -17,9 +17,9 @@ public class AdminInstanceZone: IAdminCommandHandler
 		"admin_instancezone_clear"
 	};
 	
-	public bool useAdminCommand(String command, Player activeChar)
+	public bool useAdminCommand(string command, Player activeChar)
 	{
-		String target = (activeChar.getTarget() != null) ? activeChar.getTarget().getName() : "no-target";
+		string target = (activeChar.getTarget() != null) ? activeChar.getTarget().getName() : "no-target";
 		// GMAudit.auditGMAction(activeChar.getName(), command, target, ""); // TODO
 		if (command.startsWith("admin_instancezone_clear"))
 		{
@@ -29,7 +29,7 @@ public class AdminInstanceZone: IAdminCommandHandler
 				st.nextToken();
 				Player player = World.getInstance().getPlayer(st.nextToken());
 				int instanceId = int.Parse(st.nextToken());
-				String name = InstanceManager.getInstance().getInstanceName(instanceId);
+				string name = InstanceManager.getInstance().getInstanceName(instanceId);
 				InstanceManager.getInstance().deleteInstanceTime(player, instanceId);
 				BuilderUtil.sendSysMessage(activeChar, "Instance zone " + name + " cleared for player " + player.getName());
 				player.sendMessage("Admin cleared instance zone " + name + " for you");
@@ -51,7 +51,7 @@ public class AdminInstanceZone: IAdminCommandHandler
 			if (st.hasMoreTokens())
 			{
 				Player player = null;
-				String playername = st.nextToken();
+				string playername = st.nextToken();
 				
 				try
 				{
@@ -90,7 +90,7 @@ public class AdminInstanceZone: IAdminCommandHandler
 	private void display(Player player, Player activeChar)
 	{
 		Map<int, DateTime> instanceTimes = InstanceManager.getInstance().getAllInstanceTimes(player);
-		StringBuilder html = new StringBuilder(500 + (instanceTimes.size() * 200));
+		StringBuilder html = new StringBuilder(500 + (instanceTimes.Count * 200));
 		html.Append("<html><center><table width=260><tr><td width=40><button value=\"Main\" action=\"bypass admin_admin\" width=40 height=21 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td><td width=180><center>Character Instances</center></td><td width=40><button value=\"Back\" action=\"bypass -h admin_current_player\" width=40 height=21 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td></tr></table><br><font color=\"LEVEL\">Instances for " + player.getName() + "</font><center><br><table><tr><td width=150>Name</td><td width=50>Time</td><td width=70>Action</td></tr>");
 		foreach (var entry in instanceTimes)
 		{
@@ -114,7 +114,7 @@ public class AdminInstanceZone: IAdminCommandHandler
 		activeChar.sendPacket(ms);
 	}
 	
-	public String[] getAdminCommandList()
+	public string[] getAdminCommandList()
 	{
 		return ADMIN_COMMANDS;
 	}

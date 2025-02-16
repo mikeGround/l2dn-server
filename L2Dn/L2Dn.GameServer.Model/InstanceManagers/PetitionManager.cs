@@ -31,15 +31,15 @@ public class PetitionManager
 	
 	public void clearCompletedPetitions()
 	{
-		int numPetitions = _pendingPetitions.size();
-		_completedPetitions.clear();
+		int numPetitions = _pendingPetitions.Count;
+		_completedPetitions.Clear();
 		LOGGER.Info(GetType().Name +": Completed petition data cleared. " + numPetitions + " petitions removed.");
 	}
 	
 	public void clearPendingPetitions()
 	{
-		int numPetitions = _pendingPetitions.size();
-		_pendingPetitions.clear();
+		int numPetitions = _pendingPetitions.Count;
+		_pendingPetitions.Clear();
 		LOGGER.Info(GetType().Name +": Pending petition queue cleared. " + numPetitions + " petitions removed.");
 	}
 	
@@ -79,7 +79,7 @@ public class PetitionManager
 	
 	public bool cancelActivePetition(Player player)
 	{
-		foreach (Petition currPetition in _pendingPetitions.values())
+		foreach (Petition currPetition in _pendingPetitions.Values)
 		{
 			if ((currPetition.getPetitioner() != null) && (currPetition.getPetitioner().getObjectId() == player.getObjectId()))
 			{
@@ -99,7 +99,7 @@ public class PetitionManager
 	{
 		if (petitioner != null)
 		{
-			foreach (Petition currPetition in _pendingPetitions.values())
+			foreach (Petition currPetition in _pendingPetitions.Values)
 			{
 				if (currPetition == null)
 				{
@@ -126,7 +126,7 @@ public class PetitionManager
 			return false;
 		}
 		
-		foreach (Petition currPetition in _pendingPetitions.values())
+		foreach (Petition currPetition in _pendingPetitions.Values)
 		{
 			if (currPetition == null)
 			{
@@ -154,7 +154,7 @@ public class PetitionManager
 	
 	public int getPendingPetitionCount()
 	{
-		return _pendingPetitions.size();
+		return _pendingPetitions.Count;
 	}
 	
 	public int getPlayerTotalPetitionCount(Player player)
@@ -165,7 +165,7 @@ public class PetitionManager
 		}
 		
 		int petitionCount = 0;
-		foreach (Petition currPetition in _pendingPetitions.values())
+		foreach (Petition currPetition in _pendingPetitions.Values)
 		{
 			if (currPetition == null)
 			{
@@ -178,7 +178,7 @@ public class PetitionManager
 			}
 		}
 		
-		foreach (Petition currPetition in _completedPetitions.values())
+		foreach (Petition currPetition in _completedPetitions.Values)
 		{
 			if (currPetition == null)
 			{
@@ -196,7 +196,7 @@ public class PetitionManager
 	
 	public bool isPetitionInProcess()
 	{
-		foreach (Petition currPetition in _pendingPetitions.values())
+		foreach (Petition currPetition in _pendingPetitions.Values)
 		{
 			if (currPetition == null)
 			{
@@ -227,7 +227,7 @@ public class PetitionManager
 	{
 		if (player != null)
 		{
-			foreach (Petition currPetition in _pendingPetitions.values())
+			foreach (Petition currPetition in _pendingPetitions.Values)
 			{
 				if (currPetition == null)
 				{
@@ -258,7 +258,7 @@ public class PetitionManager
 	{
 		if (petitioner != null)
 		{
-			foreach (Petition currPetition in _pendingPetitions.values())
+			foreach (Petition currPetition in _pendingPetitions.Values)
 			{
 				if (currPetition == null)
 				{
@@ -277,17 +277,16 @@ public class PetitionManager
 	
 	private bool isValidPetition(int petitionId)
 	{
-		return _pendingPetitions.containsKey(petitionId);
+		return _pendingPetitions.ContainsKey(petitionId);
 	}
 	
 	public bool rejectPetition(Player respondingAdmin, int petitionId)
 	{
-		if (!isValidPetition(petitionId))
+		if (!_pendingPetitions.TryGetValue(petitionId, out Petition? currPetition))
 		{
 			return false;
 		}
 		
-		Petition currPetition = _pendingPetitions.get(petitionId);
 		if (currPetition.getResponder() != null)
 		{
 			return false;
@@ -297,12 +296,12 @@ public class PetitionManager
 		return (currPetition.endPetitionConsultation(PetitionState.RESPONDER_REJECT));
 	}
 	
-	public bool sendActivePetitionMessage(Player player, String messageText)
+	public bool sendActivePetitionMessage(Player player, string messageText)
 	{
 		// if (!isPlayerInConsultation(player))
 		// return false;
 		CreatureSayPacket cs;
-		foreach (Petition currPetition in _pendingPetitions.values())
+		foreach (Petition currPetition in _pendingPetitions.Values)
 		{
 			if (currPetition == null)
 			{
@@ -335,7 +334,7 @@ public class PetitionManager
 
 	public void sendPendingPetitionList(Player player)
 	{
-		StringBuilder content = new StringBuilder(600 + (_pendingPetitions.size() * 300));
+		StringBuilder content = new StringBuilder(600 + (_pendingPetitions.Count * 300));
 		content.Append(
 			"<html><body><center><table width=270><tr><td width=45><button value=\"Main\" action=\"bypass " +
 			"admin_admin\" width=45 height=21 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\">" +
@@ -347,7 +346,7 @@ public class PetitionManager
 			"<td align=right><button value=\"Refresh\" action=\"bypass -h admin_view_petitions\" width=\"80\" " +
 			"height=\"21\" back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td></tr></table><br></td></tr>");
 
-		if (_pendingPetitions.isEmpty())
+		if (_pendingPetitions.Count == 0)
 		{
 			content.Append("<tr><td>There are no currently pending petitions.</td></tr>");
 		}
@@ -358,7 +357,7 @@ public class PetitionManager
 
 		bool color = true;
 		int petcount = 0;
-		foreach (Petition currPetition in _pendingPetitions.values())
+		foreach (Petition currPetition in _pendingPetitions.Values)
 		{
 			if (currPetition == null)
 			{
@@ -407,7 +406,7 @@ public class PetitionManager
 		player.sendPacket(htmlMsg);
 	}
 
-	public int submitPetition(Player petitioner, String petitionText, int petitionType)
+	public int submitPetition(Player petitioner, string petitionText, int petitionType)
 	{
 		// Create a new petition instance and add it to the list of pending petitions.
 		Petition newPetition = new Petition(petitioner, petitionText, petitionType);
@@ -415,7 +414,7 @@ public class PetitionManager
 		_pendingPetitions.put(newPetitionId, newPetition);
 		
 		// Notify all GMs that a new petition has been submitted.
-		String msgContent = petitioner.getName() + " has submitted a new petition."; // (ID: " + newPetitionId + ").";
+		string msgContent = petitioner.getName() + " has submitted a new petition."; // (ID: " + newPetitionId + ").";
 		AdminData.getInstance().broadcastToGMs(new CreatureSayPacket(petitioner, ChatType.HERO_VOICE, "Petition System", msgContent));
 		return newPetitionId;
 	}
@@ -456,6 +455,6 @@ public class PetitionManager
 	
 	private static class SingletonHolder
 	{
-		public static readonly PetitionManager INSTANCE = new PetitionManager();
+		public static readonly PetitionManager INSTANCE = new();
 	}
 }

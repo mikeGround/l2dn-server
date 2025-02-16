@@ -1,3 +1,4 @@
+using System.Globalization;
 using L2Dn.GameServer.AI;
 using L2Dn.GameServer.Data;
 using L2Dn.GameServer.Enums;
@@ -76,9 +77,9 @@ public class AdminEffects: IAdminCommandHandler
 		"admin_playmovie",
 	};
 	
-	public bool useAdminCommand(String commandValue, Player activeChar)
+	public bool useAdminCommand(string commandValue, Player activeChar)
 	{
-		String command = commandValue;
+		string command = commandValue;
 		StringTokenizer st = new StringTokenizer(command);
 		st.nextToken();
 		
@@ -158,9 +159,9 @@ public class AdminEffects: IAdminCommandHandler
 		{
 			try
 			{
-				String val1 = st.nextToken();
+				string val1 = st.nextToken();
 				int intensity = int.Parse(val1);
-				String val2 = st.nextToken();
+				string val2 = st.nextToken();
 				int duration = int.Parse(val2);
 				activeChar.broadcastPacket(new EarthquakePacket(new Location3D(activeChar.getX(), activeChar.getY(), activeChar.getZ()), intensity, duration));
 			}
@@ -173,8 +174,8 @@ public class AdminEffects: IAdminCommandHandler
 		{
 			try
 			{
-				String type = st.nextToken();
-				String state = st.nextToken();
+				string type = st.nextToken();
+				string state = st.nextToken();
 				int duration = int.Parse(st.nextToken());
 				adminAtmosphere(type, state, duration, activeChar);
 			}
@@ -234,7 +235,7 @@ public class AdminEffects: IAdminCommandHandler
 		}
 		else if (command.startsWith("admin_para")) // || command.startsWith("admin_para_menu"))
 		{
-			String type = "1";
+			string type = "1";
 			try
 			{
 				type = st.nextToken();
@@ -268,7 +269,7 @@ public class AdminEffects: IAdminCommandHandler
 		}
 		else if (command.startsWith("admin_unpara")) // || command.startsWith("admin_unpara_menu"))
 		{
-			String type = "1";
+			string type = "1";
 			try
 			{
 				type = st.nextToken();
@@ -343,7 +344,7 @@ public class AdminEffects: IAdminCommandHandler
 		{
 			try
 			{
-				String val = st.nextToken();
+				string val = st.nextToken();
 				int radius = 400;
 				if (st.hasMoreTokens())
 				{
@@ -382,7 +383,7 @@ public class AdminEffects: IAdminCommandHandler
 		{
 			try
 			{
-				String target = null;
+				string target = null;
 				WorldObject obj = activeChar.getTarget();
 				if (st.countTokens() == 2)
 				{
@@ -441,13 +442,14 @@ public class AdminEffects: IAdminCommandHandler
 		}
 		else if (command.startsWith("admin_ave_abnormal"))
 		{
-			String param1 = null;
+			string param1 = null;
 			if (st.countTokens() > 0)
 			{
 				param1 = st.nextToken();
 			}
-			
-			if ((param1 != null) && !Util.isDigit(param1))
+
+			int page = 0;
+			if (!string.IsNullOrEmpty(param1) && !int.TryParse(param1, CultureInfo.InvariantCulture, out page))
 			{
 				AbnormalVisualEffect ave;
 				
@@ -461,13 +463,13 @@ public class AdminEffects: IAdminCommandHandler
 				}
 				
 				int radius = 0;
-				String param2 = null;
+				string param2 = null;
 				if (st.countTokens() == 1)
 				{
 					param2 = st.nextToken();
-					if (Util.isDigit(param2))
+					if (int.TryParse(param2, CultureInfo.InvariantCulture, out int value))
 					{
-						radius = int.Parse(param2);
+						radius = value;
 					}
 				}
 				
@@ -491,19 +493,6 @@ public class AdminEffects: IAdminCommandHandler
 			}
 			else
 			{
-				int page = 0;
-				if (param1 != null)
-				{
-					try
-					{
-						page = int.Parse(param1);
-					}
-					catch (FormatException nfe)
-					{
-						BuilderUtil.sendSysMessage(activeChar, "Incorrect page.");
-					}
-				}
-
 				PageResult result = PageBuilder
 					.newBuilder(EnumUtil.GetValues<AbnormalVisualEffect>().ToList(), 100, "bypass -h admin_ave_abnormal")
 					.currentPage(page).style(ButtonsStyle.INSTANCE).bodyHandler((pages, ave, sb) =>
@@ -578,7 +567,7 @@ public class AdminEffects: IAdminCommandHandler
 			Npc npc = (Npc) target;
 			try
 			{
-				String type = st.nextToken();
+				string type = st.nextToken();
 				int diplayeffect = int.Parse(type);
 				npc.setDisplayEffect(diplayeffect);
 			}
@@ -688,7 +677,7 @@ public class AdminEffects: IAdminCommandHandler
 	 * @param duration
 	 * @param activeChar
 	 */
-	private void adminAtmosphere(String type, String state, int duration, Player activeChar)
+	private void adminAtmosphere(string type, string state, int duration, Player activeChar)
 	{
 		if (type.equals("sky"))
 		{
@@ -718,7 +707,7 @@ public class AdminEffects: IAdminCommandHandler
 		}
 	}
 	
-	private void playAdminSound(Player activeChar, String sound)
+	private void playAdminSound(Player activeChar, string sound)
 	{
 		PlaySoundPacket snd = new PlaySoundPacket(1, sound, 0, 0, 0, 0, 0);
 		activeChar.sendPacket(snd);
@@ -726,14 +715,14 @@ public class AdminEffects: IAdminCommandHandler
 		BuilderUtil.sendSysMessage(activeChar, "Playing " + sound + ".");
 	}
 	
-	public String[] getAdminCommandList()
+	public string[] getAdminCommandList()
 	{
 		return ADMIN_COMMANDS;
 	}
 	
-	private void showMainPage(Player activeChar, String command)
+	private void showMainPage(Player activeChar, string command)
 	{
-		String filename = "effects_menu";
+		string filename = "effects_menu";
 		if (command.contains("social"))
 		{
 			filename = "social";

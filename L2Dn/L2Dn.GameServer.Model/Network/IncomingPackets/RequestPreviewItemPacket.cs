@@ -147,7 +147,7 @@ public struct RequestPreviewItemPacket: IIncomingPacket<GameSession>
 			    }
 		    }
 
-		    if (itemList.containsKey(slot))
+		    if (itemList.ContainsKey(slot))
 		    {
 			    player.sendPacket(SystemMessageId.YOU_CAN_NOT_TRY_THOSE_ITEMS_ON_AT_THE_SAME_TIME);
 			    return ValueTask.CompletedTask;
@@ -172,7 +172,7 @@ public struct RequestPreviewItemPacket: IIncomingPacket<GameSession>
 		    return ValueTask.CompletedTask;
 	    }
 
-	    if (!itemList.isEmpty())
+	    if (itemList.Count != 0)
 	    {
 		    player.sendPacket(new ShopPreviewInfoPacket(itemList));
 		    // Schedule task

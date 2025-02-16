@@ -1,3 +1,5 @@
+using System.Globalization;
+using L2Dn.Extensions;
 using L2Dn.GameServer.Cache;
 using L2Dn.GameServer.Data.Sql;
 using L2Dn.GameServer.Db;
@@ -25,19 +27,19 @@ public class AdminCastle: IAdminCommandHandler
 		"admin_castlemanage",
 	};
 	
-	public bool useAdminCommand(String command, Player activeChar)
+	public bool useAdminCommand(string command, Player activeChar)
 	{
 		StringTokenizer st = new StringTokenizer(command, " ");
-		String actualCommand = st.nextToken();
+		string actualCommand = st.nextToken();
 		if (actualCommand.equals("admin_castlemanage"))
 		{
 			if (st.hasMoreTokens())
 			{
-				String param = st.nextToken();
+				string param = st.nextToken();
 				Castle castle;
-				if (Util.isDigit(param))
+				if (int.TryParse(param, CultureInfo.InvariantCulture, out int castleId))
 				{
-					castle = CastleManager.getInstance().getCastleById(int.Parse(param));
+					castle = CastleManager.getInstance().getCastleById(castleId);
 				}
 				else
 				{
@@ -56,7 +58,7 @@ public class AdminCastle: IAdminCommandHandler
 				}
 				else
 				{
-					String action = st.nextToken();
+					string action = st.nextToken();
 					Player target = checkTarget(activeChar) ? activeChar.getTarget().getActingPlayer() : null;
 					switch (action)
 					{
@@ -115,7 +117,7 @@ public class AdminCastle: IAdminCommandHandler
 						}
 						case "startSiege":
 						{
-							if (!castle.getSiege().getAttackerClans().isEmpty())
+							if (castle.getSiege().getAttackerClans().Count != 0)
 							{
 								castle.getSiege().startSiege();
 							}
@@ -225,7 +227,7 @@ public class AdminCastle: IAdminCommandHandler
 			htmlContent.Replace("%castleName%", castle.getName());
 			htmlContent.Replace("%ownerName%", ownerClan != null ? ownerClan.getLeaderName() : "NPC");
 			htmlContent.Replace("%ownerClan%", ownerClan != null ? ownerClan.getName() : "NPC");
-			htmlContent.Replace("%castleSide%", CommonUtil.capitalizeFirst(castle.getSide().ToString().toLowerCase()));
+			htmlContent.Replace("%castleSide%", castle.getSide().ToString().toLowerCase().CapitalizeFirstLetter());
 			player.sendPacket(html);
 		}
 	}
@@ -235,7 +237,7 @@ public class AdminCastle: IAdminCommandHandler
 		return ((player.getTarget() != null) && player.getTarget().isPlayer() && (((Player) player.getTarget()).getClan() != null));
 	}
 	
-	public String[] getAdminCommandList()
+	public string[] getAdminCommandList()
 	{
 		return ADMIN_COMMANDS;
 	}

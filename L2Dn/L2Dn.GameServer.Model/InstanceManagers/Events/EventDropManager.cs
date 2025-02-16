@@ -25,7 +25,7 @@ public class EventDropManager
 	
 	public void doEventDrop(Creature attacker, Attackable attackable)
 	{
-		if (EVENT_DROPS.isEmpty())
+		if (EVENT_DROPS.Count == 0)
 		{
 			return;
 		}
@@ -43,7 +43,7 @@ public class EventDropManager
 			return;
 		}
 		
-		foreach (List<EventDropHolder> eventDrops in EVENT_DROPS.values())
+		foreach (List<EventDropHolder> eventDrops in EVENT_DROPS.Values)
 		{
 			foreach (EventDropHolder drop in eventDrops)
 			{

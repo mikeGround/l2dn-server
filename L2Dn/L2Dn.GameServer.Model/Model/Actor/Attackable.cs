@@ -33,28 +33,34 @@ public class Attackable: Npc
 	// Raid
 	private bool _isRaid;
 	private bool _isRaidMinion;
+
 	//
 	private bool _champion;
 	private readonly Map<Creature, AggroInfo> _aggroList = new();
 	private bool _canReturnToSpawnPoint = true;
 	private bool _seeThroughSilentMove;
+
 	// Manor
 	private bool _seeded;
 	private Seed _seed;
 	private int _seederObjId;
-	private readonly AtomicReference<ItemHolder> _harvestItem = new();
+	private ItemHolder? _harvestItem;
+
 	// Spoil
 	private int _spoilerObjectId;
 	private bool _plundered;
-	private readonly AtomicReference<ICollection<ItemHolder>> _sweepItems = new();
+	private ICollection<ItemHolder>? _sweepItems;
+
 	// Over-hit
 	private bool _overhit;
 	private double _overhitDamage;
 	private Creature _overhitAttacker;
+
 	// Command channel
 	private CommandChannel _firstCommandChannelAttacked;
 	private CommandChannelTimer _commandChannelTimer;
 	private DateTime? _commandChannelLastAttack;
+
 	// Misc
 	private bool _mustGiveExpSp;
 	
@@ -286,7 +292,7 @@ public class Attackable: Npc
 	{
 		try
 		{
-			if (_aggroList.isEmpty())
+			if (_aggroList.Count == 0)
 			{
 				return;
 			}
@@ -386,8 +392,7 @@ public class Attackable: Npc
 			}
 
 			damagingParties.Sort((a, b) => a.damage.CompareTo(b.damage));
-			PartyContainer? mostDamageParty =
-				!damagingParties.isEmpty() ? damagingParties[damagingParties.Count - 1] : null;
+			PartyContainer? mostDamageParty = damagingParties.Count != 0 ? damagingParties[^1] : null;
 
 			// Calculate raidboss points
 			if (_isRaid && !_isRaidMinion)
@@ -465,7 +470,7 @@ public class Attackable: Npc
 				return;
 			}
 			
-			if (!rewards.isEmpty())
+			if (rewards.Count != 0)
 			{
 				foreach (DamageDoneInfo reward in rewards.Values)
 				{
@@ -487,7 +492,7 @@ public class Attackable: Npc
 					// If this attacker have servitor, get Exp Penalty applied for the servitor.
 					float penalty = 1;
 					
-					foreach (Summon summon in attacker.getServitors().values())
+					foreach (Summon summon in attacker.getServitors().Values)
 					{
 						if (((Servitor) summon).getExpMultiplier() > 1)
 						{
@@ -725,7 +730,7 @@ public class Attackable: Npc
 	
 	public Creature getMainDamageDealer()
 	{
-		if (_aggroList.isEmpty())
+		if (_aggroList.Count == 0)
 		{
 			return null;
 		}
@@ -933,7 +938,7 @@ public class Attackable: Npc
 	 */
 	public Creature getMostHated()
 	{
-		if (_aggroList.isEmpty() || isAlikeDead())
+		if (_aggroList.Count == 0 || isAlikeDead())
 		{
 			return null;
 		}
@@ -943,7 +948,7 @@ public class Attackable: Npc
 		
 		// While Interacting over This Map Removing Object is Not Allowed
 		// Go through the aggroList of the Attackable
-		foreach (AggroInfo ai in _aggroList.values())
+		foreach (AggroInfo ai in _aggroList.Values)
 		{
 			if (ai == null)
 			{
@@ -965,7 +970,7 @@ public class Attackable: Npc
 	 */
 	public List<Creature> get2MostHated()
 	{
-		if (_aggroList.isEmpty() || isAlikeDead())
+		if (_aggroList.Count == 0 || isAlikeDead())
 		{
 			return null;
 		}
@@ -977,7 +982,7 @@ public class Attackable: Npc
 		
 		// While iterating over this map removing objects is not allowed
 		// Go through the aggroList of the Attackable
-		foreach (AggroInfo ai in _aggroList.values())
+		foreach (AggroInfo ai in _aggroList.Values)
 		{
 			if (ai.checkHate(this) > maxHate)
 			{
@@ -1013,13 +1018,13 @@ public class Attackable: Npc
 	
 	public List<Creature> getHateList()
 	{
-		if (_aggroList.isEmpty() || isAlikeDead())
+		if (_aggroList.Count == 0 || isAlikeDead())
 		{
 			return null;
 		}
 		
 		List<Creature> result = new();
-		foreach (AggroInfo ai in _aggroList.values())
+		foreach (AggroInfo ai in _aggroList.Values)
 		{
 			ai.checkHate(this);
 			
@@ -1034,7 +1039,7 @@ public class Attackable: Npc
 	 */
 	public long getHating(Creature target)
 	{
-		if (_aggroList.isEmpty() || (target == null))
+		if (_aggroList.Count == 0 || (target == null))
 		{
 			return 0;
 		}
@@ -1131,7 +1136,7 @@ public class Attackable: Npc
 							Item droppedItem = dropItem(mainDamageDealer, drop); // drop the item on the ground
 							if (Config.FAKE_PLAYER_CAN_PICKUP)
 							{
-								mainDamageDealer.getFakePlayerDrops().add(droppedItem);
+								mainDamageDealer.getFakePlayerDrops().Add(droppedItem);
 							}
 						}
 					}
@@ -1144,7 +1149,7 @@ public class Attackable: Npc
 		CursedWeaponsManager.getInstance().checkDrop(this, player);
 		if (isSpoiled() && !_plundered)
 		{
-			_sweepItems.set(npcTemplate.calculateDrops(DropType.SPOIL, this, player));
+			_sweepItems = npcTemplate.calculateDrops(DropType.SPOIL, this, player);
 		}
 		
 		ICollection<ItemHolder> deathItems1 = npcTemplate.calculateDrops(DropType.DROP, this, player);
@@ -1241,7 +1246,7 @@ public class Attackable: Npc
 	 */
 	public bool isInAggroList(Creature creature)
 	{
-		return _aggroList.containsKey(creature);
+		return _aggroList.ContainsKey(creature);
 	}
 	
 	/**
@@ -1262,7 +1267,7 @@ public class Attackable: Npc
 	 */
 	public override bool isSweepActive()
 	{
-		return _sweepItems.get() != null;
+		return _sweepItems != null;
 	}
 	
 	/**
@@ -1270,7 +1275,7 @@ public class Attackable: Npc
 	 */
 	public List<ItemTemplate> getSpoilLootItems()
 	{
-		ICollection<ItemHolder> sweepItems = _sweepItems.get();
+		ICollection<ItemHolder>? sweepItems = _sweepItems;
 		List<ItemTemplate> lootItems = new();
 		if (sweepItems != null)
 		{
@@ -1285,17 +1290,17 @@ public class Attackable: Npc
 	/**
 	 * @return table containing all Item that can be spoiled.
 	 */
-	public ICollection<ItemHolder> takeSweep()
+	public ICollection<ItemHolder>? takeSweep()
 	{
-		return _sweepItems.getAndSet(null);
+		return Interlocked.Exchange(ref _sweepItems, null);
 	}
 	
 	/**
 	 * @return table containing all Item that can be harvested.
 	 */
-	public ItemHolder takeHarvest()
+	public ItemHolder? takeHarvest()
 	{
-		return _harvestItem.getAndSet(null);
+		return Interlocked.Exchange(ref _harvestItem, null);
 	}
 	
 	/**
@@ -1456,8 +1461,8 @@ public class Attackable: Npc
 		clearAggroList();
 		
 		// Clear Harvester reward
-		_harvestItem.set(null);
-		_sweepItems.set(null);
+		_harvestItem = null;
+		_sweepItems = null;
 		_plundered = false;
 		
 		// fake players
@@ -1549,7 +1554,7 @@ public class Attackable: Npc
 	{
 		_plundered = true;
 		_spoilerObjectId = player.getObjectId();
-		_sweepItems.set(getTemplate().calculateDrops(DropType.SPOIL, this, player));
+		_sweepItems = getTemplate().calculateDrops(DropType.SPOIL, this, player);
 	}
 	
 	/**
@@ -1566,6 +1571,7 @@ public class Attackable: Npc
 			{
 				switch (skillId)
 				{
+					// TODO: un-hardcode numbers
 					case 4303: // Strong type x2
 					{
 						count *= 2;
@@ -1615,7 +1621,7 @@ public class Attackable: Npc
 			{
 				count += diff;
 			}
-			_harvestItem.set(new ItemHolder(_seed.getCropId(), count * Config.RATE_DROP_MANOR));
+			_harvestItem = new ItemHolder(_seed.getCropId(), count * Config.RATE_DROP_MANOR);
 		}
 	}
 	
@@ -1792,7 +1798,7 @@ public class Attackable: Npc
 			{
 				_aggroList.remove(creature);
 			}
-			if (_aggroList.isEmpty())
+			if (_aggroList.Count == 0)
 			{
 				if (getAI() is AttackableAI)
 				{

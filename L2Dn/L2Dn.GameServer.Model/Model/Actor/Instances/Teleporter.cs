@@ -1,4 +1,5 @@
-﻿using L2Dn.GameServer.Data;
+﻿using System.Globalization;
+using L2Dn.GameServer.Data;
 using L2Dn.GameServer.Data.Xml;
 using L2Dn.GameServer.Enums;
 using L2Dn.GameServer.InstanceManagers;
@@ -39,7 +40,7 @@ public class Teleporter: Npc
 		return attacker.isMonster() || base.isAutoAttackable(attacker);
 	}
 	
-	public override void onBypassFeedback(Player player, String command)
+	public override void onBypassFeedback(Player player, string command)
 	{
 		// Process bypass
 		StringTokenizer st = new StringTokenizer(command, " ");
@@ -52,7 +53,7 @@ public class Teleporter: Npc
 			}
 			case "showTeleports":
 			{
-				String listName = (st.hasMoreTokens()) ? st.nextToken() : TeleportType.NORMAL.ToString();
+				string listName = (st.hasMoreTokens()) ? st.nextToken() : TeleportType.NORMAL.ToString();
 				TeleportHolder holder = TeleporterData.getInstance().getHolder(getId(), listName);
 				if (holder == null)
 				{
@@ -69,7 +70,7 @@ public class Teleporter: Npc
 			}
 			case "showTeleportsHunting":
 			{
-				String listName = (st.hasMoreTokens()) ? st.nextToken() : TeleportType.HUNTING.ToString();
+				string listName = (st.hasMoreTokens()) ? st.nextToken() : TeleportType.HUNTING.ToString();
 				TeleportHolder holder = TeleporterData.getInstance().getHolder(getId(), listName);
 				if (holder == null)
 				{
@@ -88,7 +89,7 @@ public class Teleporter: Npc
 					return;
 				}
 				
-				String listName = st.nextToken();
+				string listName = st.nextToken();
 				TeleportHolder holder = TeleporterData.getInstance().getHolder(getId(), listName);
 				if (holder == null)
 				{
@@ -126,24 +127,24 @@ public class Teleporter: Npc
 	{
 		if (st.hasMoreTokens())
 		{
-			String token = st.nextToken();
-			if (Util.isDigit(token))
+			string token = st.nextToken();
+			if (int.TryParse(token, CultureInfo.InvariantCulture, out int value))
 			{
-				return int.Parse(token);
+				return value;
 			}
 		}
 		return defaultVal;
 	}
 	
-	public override String getHtmlPath(int npcId, int value, Player player)
+	public override string getHtmlPath(int npcId, int value, Player player)
 	{
-		String pom;
+		string pom;
 		if (value == 0)
 		{
 			pom = npcId.ToString();
-			if ((player != null) && QUEST_RECOMENDATIONS.containsKey(npcId))
+			if ((player != null) && QUEST_RECOMENDATIONS.TryGetValue(npcId, out List<TeleporterQuestRecommendationHolder>? holders))
 			{
-				foreach (TeleporterQuestRecommendationHolder rec in QUEST_RECOMENDATIONS.get(npcId))
+				foreach (TeleporterQuestRecommendationHolder rec in holders)
 				{
 					bool breakOuterLoop = false;
 					QuestState qs = player.getQuestState(rec.getQuestName());
@@ -183,7 +184,7 @@ public class Teleporter: Npc
 		}
 		
 		// Teleporter is on castle ground
-		String filename = "html/teleporter/castleteleporter-no.htm";
+		string filename = "html/teleporter/castleteleporter-no.htm";
 		if ((player.getClan() != null) && (getCastle().getOwnerId() == player.getClanId())) // Clan owns castle
 		{
 			filename = getHtmlPath(getId(), 0, player); // Owner message window
@@ -195,7 +196,7 @@ public class Teleporter: Npc
 		sendHtmlMessage(player, filename);
 	}
 	
-	private void sendHtmlMessage(Player player, String filename)
+	private void sendHtmlMessage(Player player, string filename)
 	{
 		HtmlContent htmlContent = HtmlContent.LoadFromFile(filename, player);
 		htmlContent.Replace("%objectId%", getObjectId().ToString());

@@ -29,14 +29,14 @@ public class TransformData: DataReaderBase
 	[MethodImpl(MethodImplOptions.Synchronized)] 
 	public void load()
 	{
-		_transformData.clear();
+		_transformData.Clear();
 		
 		LoadXmlDocuments(DataFileLocation.Data, "stats/transformations").ForEach(t =>
 		{
 			t.Document.Elements("list").Elements("transform").ForEach(x => loadElement(t.FilePath, x));
 		});
 		
-		LOGGER.Info(GetType().Name + ": Loaded " + _transformData.size() + " transform templates.");
+		LOGGER.Info(GetType().Name + ": Loaded " + _transformData.Count + " transform templates.");
 	}
 	
 	private void loadElement(string filePath, XElement element)

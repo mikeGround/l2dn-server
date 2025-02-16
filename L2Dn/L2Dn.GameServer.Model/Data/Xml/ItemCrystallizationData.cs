@@ -35,11 +35,11 @@ public class ItemCrystallizationData: DataReaderBase
 	
 	public void load()
 	{
-		_crystallizationTemplates.clear();
+		_crystallizationTemplates.Clear();
 		foreach (CrystalType crystalType in EnumUtil.GetValues<CrystalType>())
 			_crystallizationTemplates.put(crystalType, new());
 		
-		_items.clear();
+		_items.Clear();
 		
 		_weaponDestroyGroup = new RewardItemsOnFailure();
 		_armorDestroyGroup = new RewardItemsOnFailure();
@@ -53,13 +53,13 @@ public class ItemCrystallizationData: DataReaderBase
 			el.Elements("weapon").ForEach(e => _weaponDestroyGroup = getFormedHolder(e));
 		});
 		
-		if (_crystallizationTemplates.size() > 0)
+		if (_crystallizationTemplates.Count > 0)
 		{
-			LOGGER.Info(GetType().Name + ": Loaded " + _crystallizationTemplates.size() + " crystallization templates.");
+			LOGGER.Info(GetType().Name + ": Loaded " + _crystallizationTemplates.Count + " crystallization templates.");
 		}
-		if (_items.size() > 0)
+		if (_items.Count > 0)
 		{
-			LOGGER.Info(GetType().Name + ": Loaded " + _items.size() + " pre-defined crystallizable items.");
+			LOGGER.Info(GetType().Name + ": Loaded " + _items.Count + " pre-defined crystallizable items.");
 		}
 		
 		// Generate remaining data.
@@ -87,7 +87,7 @@ public class ItemCrystallizationData: DataReaderBase
 			int itemId = el.GetAttributeValueAsInt32("id");
 			long itemCount = el.GetAttributeValueAsInt64("count");
 			double itemChance = el.GetAttributeValueAsDouble("chance");
-			crystallizeRewards.add(new ItemChanceHolder(itemId, itemChance, itemCount));
+			crystallizeRewards.Add(new ItemChanceHolder(itemId, itemChance, itemCount));
 		});
 
 		_crystallizationTemplates.get(crystalType).put(crystallizationType, crystallizeRewards);
@@ -103,7 +103,7 @@ public class ItemCrystallizationData: DataReaderBase
 			int itemId = el.GetAttributeValueAsInt32("id");
 			long itemCount = el.GetAttributeValueAsInt64("count");
 			double itemChance = el.GetAttributeValueAsDouble("chance");
-			crystallizeRewards.add(new ItemChanceHolder(itemId, itemChance, itemCount));
+			crystallizeRewards.Add(new ItemChanceHolder(itemId, itemChance, itemCount));
 		});
 
 		_items.put(id, new CrystallizationDataHolder(id, crystallizeRewards));
@@ -111,7 +111,7 @@ public class ItemCrystallizationData: DataReaderBase
 	
 	public int getLoadedCrystallizationTemplateCount()
 	{
-		return _crystallizationTemplates.size();
+		return _crystallizationTemplates.Count;
 	}
 	
 	private List<ItemChanceHolder> calculateCrystallizeRewards(ItemTemplate item, List<ItemChanceHolder> crystallizeRewards)
@@ -133,7 +133,7 @@ public class ItemCrystallizationData: DataReaderBase
 				count = (long)(count * countMul);
 			}
 			
-			rewards.add(new ItemChanceHolder(reward.getId(), chance, count));
+			rewards.Add(new ItemChanceHolder(reward.getId(), chance, count));
 		}
 		
 		return rewards;
@@ -141,11 +141,11 @@ public class ItemCrystallizationData: DataReaderBase
 	
 	private void generateCrystallizationData()
 	{
-		int previousCount = _items.size();
+		int previousCount = _items.Count;
 		foreach (ItemTemplate item in ItemData.getInstance().getAllItems())
 		{
 			// Check if the data has not been generated.
-			if (((item is Weapon) || (item is Armor)) && item.isCrystallizable() && !_items.containsKey(item.getId()))
+			if (((item is Weapon) || (item is Armor)) && item.isCrystallizable() && !_items.ContainsKey(item.getId()))
 			{
 				List<ItemChanceHolder> holder = _crystallizationTemplates.get(item.getCrystalType()).get((item is Weapon) ? CrystallizationType.WEAPON : CrystallizationType.ARMOR);
 				if (holder != null)
@@ -155,7 +155,7 @@ public class ItemCrystallizationData: DataReaderBase
 			}
 		}
 		
-		int generated = _items.size() - previousCount;
+		int generated = _items.Count - previousCount;
 		if (generated > 0)
 		{
 			LOGGER.Info(GetType().Name + ": Generated " + generated + " crystallizable items from templates.");
@@ -201,7 +201,7 @@ public class ItemCrystallizationData: DataReaderBase
 			}
 			if (!found)
 			{
-				result.add(new ItemChanceHolder(crystalItemId, 100, item.getCrystalCount()));
+				result.Add(new ItemChanceHolder(crystalItemId, 100, item.getCrystalCount()));
 			}
 			
 			result.AddRange(items);
@@ -209,7 +209,7 @@ public class ItemCrystallizationData: DataReaderBase
 		else
 		{
 			// Add basic crystal reward.
-			result.add(new ItemChanceHolder(crystalItemId, 100, item.getCrystalCount()));
+			result.Add(new ItemChanceHolder(crystalItemId, 100, item.getCrystalCount()));
 		}
 		
 		return result;

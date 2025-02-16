@@ -34,13 +34,13 @@ public class HennaData: DataReaderBase
 	
 	public void load()
 	{
-		_hennaItemIdList.clear();
-		_hennaDyeIdList.clear();
+		_hennaItemIdList.Clear();
+		_hennaDyeIdList.Clear();
 		
 		XDocument document = LoadXmlDocument(DataFileLocation.Data, "stats/hennaList.xml");
 		document.Elements("list").Elements("henna").ForEach(parseElement);
 		
-		LOGGER.Info(GetType().Name + ": Loaded " + _hennaDyeIdList.size() + " henna data.");
+		LOGGER.Info(GetType().Name + ": Loaded " + _hennaDyeIdList.Count + " henna data.");
 	}
 	
 	/**
@@ -90,14 +90,14 @@ public class HennaData: DataReaderBase
 		{
 			int id = e.GetAttributeValueAsInt32("id");
 			int level = e.GetAttributeValueAsInt32("level");
-			skills.add(SkillData.getInstance().getSkill(id, level));
+			skills.Add(SkillData.getInstance().getSkill(id, level));
 		});
 		
 		element.Elements("classId").ForEach(e =>
 		{
 			string[] ids = ((string)e).Split(",");
 			foreach (string s in ids)
-				wearClassIds.add(int.Parse(s));
+				wearClassIds.Add(int.Parse(s));
 		});
 		
 		Henna henna = new Henna(set);
@@ -135,11 +135,11 @@ public class HennaData: DataReaderBase
 	public List<Henna> getHennaList(Player player)
 	{
 		List<Henna> list = new();
-		foreach (Henna henna in _hennaDyeIdList.values())
+		foreach (Henna henna in _hennaDyeIdList.Values)
 		{
 			if (henna.isAllowedClass(player))
 			{
-				list.add(henna);
+				list.Add(henna);
 			}
 		}
 		return list;

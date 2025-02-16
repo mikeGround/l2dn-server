@@ -27,7 +27,7 @@ public class DecayTaskManager: Runnable
 		}
 		_working = true;
 
-		if (!DECAY_SCHEDULES.isEmpty())
+		if (DECAY_SCHEDULES.Count != 0)
 		{
 			DateTime currentTime = DateTime.UtcNow;
 			List<Creature> creatures = DECAY_SCHEDULES.Where(c => currentTime > c.Value).Select(x => x.Key).ToList();
@@ -119,13 +119,13 @@ public class DecayTaskManager: Runnable
 		return TimeSpan.MaxValue;
 	}
 	
-	public override String ToString()
+	public override string ToString()
 	{
 		StringBuilder ret = new StringBuilder();
 		ret.Append("============= DecayTask Manager Report ============");
 		ret.Append(Environment.NewLine);
 		ret.Append("Tasks count: ");
-		ret.Append(DECAY_SCHEDULES.size());
+		ret.Append(DECAY_SCHEDULES.Count);
 		ret.Append(Environment.NewLine);
 		ret.Append("Tasks dump:");
 		ret.Append(Environment.NewLine);

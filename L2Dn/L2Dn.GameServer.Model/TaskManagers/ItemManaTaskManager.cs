@@ -27,7 +27,7 @@ public class ItemManaTaskManager: Runnable
 		}
 		_working = true;
 		
-		if (!ITEMS.isEmpty())
+		if (ITEMS.Count != 0)
 		{
 			DateTime currentTime = DateTime.UtcNow;
 			List<Item> toRemove = new List<Item>();
@@ -59,7 +59,7 @@ public class ItemManaTaskManager: Runnable
 	
 	public void add(Item item)
 	{
-		if (!ITEMS.containsKey(item))
+		if (!ITEMS.ContainsKey(item))
 		{
 			ITEMS.put(item, DateTime.UtcNow.AddMilliseconds(MANA_CONSUMPTION_RATE));
 		}

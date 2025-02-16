@@ -29,21 +29,21 @@ public class FenceData: DataReaderBase
 
 	public void load()
 	{
-		if (!_fences.isEmpty())
+		if (_fences.Count != 0)
 		{
 			// Remove old fences when reloading
-			_fences.values().forEach(x => removeFence(x));
+			_fences.Values.ForEach(removeFence);
 		}
 
 		XDocument document = LoadXmlDocument(DataFileLocation.Data, "FenceData.xml");
 		document.Elements("list").Elements("fence").ForEach(spawnFence);
 
-		LOGGER.Info(GetType().Name + ": Loaded " + _fences.size() + " fences.");
+		LOGGER.Info(GetType().Name + ": Loaded " + _fences.Count + " fences.");
 	}
 
 	public int getLoadedElementsCount()
 	{
-		return _fences.size();
+		return _fences.Count;
 	}
 
 	private void spawnFence(XElement fenceNode)
@@ -103,7 +103,7 @@ public class FenceData: DataReaderBase
 	{
 		WorldRegion? region = World.getInstance().getRegion(location.X, location.Y);
 		List<Fence>? fences = region?.getFences();
-		if (fences == null || fences.isEmpty())
+		if (fences == null || fences.Count == 0)
 		{
 			return false;
 		}

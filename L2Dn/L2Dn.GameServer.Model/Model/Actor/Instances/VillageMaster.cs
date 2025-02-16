@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using L2Dn.Extensions;
 using L2Dn.GameServer.Data;
 using L2Dn.GameServer.Data.Sql;
 using L2Dn.GameServer.Data.Xml;
@@ -128,12 +129,12 @@ public class VillageMaster: Folk
 		
 		if (actualCommand.equalsIgnoreCase("create_clan"))
 		{
-			if (cmdParams.isEmpty())
+			if (string.IsNullOrEmpty(cmdParams))
 			{
 				return;
 			}
 			
-			if (!cmdParams2.isEmpty() || !isValidName(cmdParams))
+			if (!string.IsNullOrEmpty(cmdParams2) || !isValidName(cmdParams))
 			{
 				player.sendPacket(SystemMessageId.CLAN_NAME_IS_INVALID);
 				return;
@@ -143,7 +144,7 @@ public class VillageMaster: Folk
 		}
 		else if (actualCommand.equalsIgnoreCase("create_academy"))
 		{
-			if (cmdParams.isEmpty())
+			if (string.IsNullOrEmpty(cmdParams))
 			{
 				return;
 			}
@@ -152,7 +153,7 @@ public class VillageMaster: Folk
 		}
 		else if (actualCommand.equalsIgnoreCase("rename_pledge"))
 		{
-			if (cmdParams.isEmpty() || cmdParams2.isEmpty())
+			if (string.IsNullOrEmpty(cmdParams) || string.IsNullOrEmpty(cmdParams2))
 			{
 				return;
 			}
@@ -161,7 +162,7 @@ public class VillageMaster: Folk
 		}
 		else if (actualCommand.equalsIgnoreCase("create_royal"))
 		{
-			if (cmdParams.isEmpty())
+			if (string.IsNullOrEmpty(cmdParams))
 			{
 				return;
 			}
@@ -170,7 +171,7 @@ public class VillageMaster: Folk
 		}
 		else if (actualCommand.equalsIgnoreCase("create_knight"))
 		{
-			if (cmdParams.isEmpty())
+			if (string.IsNullOrEmpty(cmdParams))
 			{
 				return;
 			}
@@ -179,7 +180,7 @@ public class VillageMaster: Folk
 		}
 		else if (actualCommand.equalsIgnoreCase("assign_subpl_leader"))
 		{
-			if (cmdParams.isEmpty())
+			if (string.IsNullOrEmpty(cmdParams))
 			{
 				return;
 			}
@@ -188,7 +189,7 @@ public class VillageMaster: Folk
 		}
 		else if (actualCommand.equalsIgnoreCase("create_ally"))
 		{
-			if (cmdParams.isEmpty())
+			if (string.IsNullOrEmpty(cmdParams))
 			{
 				return;
 			}
@@ -212,7 +213,7 @@ public class VillageMaster: Folk
 		}
 		else if (actualCommand.equalsIgnoreCase("change_clan_leader"))
 		{
-			if (cmdParams.isEmpty())
+			if (string.IsNullOrEmpty(cmdParams))
 			{
 				return;
 			}
@@ -232,7 +233,7 @@ public class VillageMaster: Folk
 			ClanMember member = clan.getClanMember(cmdParams);
 			if (member == null)
 			{
-				SystemMessagePacket sm = new SystemMessagePacket(SystemMessageId.S1_DOES_NOT_EXIST);
+				SystemMessagePacket sm = new(SystemMessageId.S1_DOES_NOT_EXIST);
 				sm.Params.addString(cmdParams);
 				player.sendPacket(sm);
 				return;
@@ -429,7 +430,7 @@ public class VillageMaster: Folk
 					}
 					break;
 				case 2: // Change Class - Initial
-					if (player.getSubClasses().isEmpty())
+					if (player.getSubClasses().Count == 0)
 					{
 						htmlText = HtmlContent.LoadFromFile("html/villagemaster/SubClass_ChangeNo.htm", player);
 					}
@@ -441,7 +442,7 @@ public class VillageMaster: Folk
 							content2.Append("<a action=\"bypass -h npc_%objectId%_Subclass 5 0\">" + ClassListData.getInstance().getClass(player.getBaseClass()).getClientCode() + "</a><br>");
 						}
 
-						foreach (SubClassHolder holder in player.getSubClasses().values())
+						foreach (SubClassHolder holder in player.getSubClasses().Values)
 						{
 							if (checkVillageMaster(holder.getClassDefinition()))
 							{
@@ -464,7 +465,7 @@ public class VillageMaster: Folk
 					}
 					break;
 				case 3: // Change/Cancel Subclass - Initial
-					if ((player.getSubClasses() == null) || player.getSubClasses().isEmpty())
+					if ((player.getSubClasses() == null) || player.getSubClasses().Count == 0)
 					{
 						htmlText = HtmlContent.LoadFromFile("html/villagemaster/SubClass_ModifyEmpty.htm", player);
 						break;
@@ -476,7 +477,7 @@ public class VillageMaster: Folk
 						htmlText = HtmlContent.LoadFromFile("html/villagemaster/SubClass_ModifyCustom.htm", player);
 						StringBuilder content3 = new StringBuilder(200);
 						int classIndex = 1;
-						foreach (SubClassHolder holder in player.getSubClasses().values())
+						foreach (SubClassHolder holder in player.getSubClasses().Values)
 						{
 							content3.Append("Sub-class " + classIndex++ +
 							                "<br><a action=\"bypass -h npc_%objectId%_Subclass 6 " +
@@ -490,7 +491,7 @@ public class VillageMaster: Folk
 					{
 						// retail html contain only 3 subclasses
 						htmlText = HtmlContent.LoadFromFile("html/villagemaster/SubClass_Modify.htm", player);
-						if (player.getSubClasses().containsKey(1))
+						if (player.getSubClasses().ContainsKey(1))
 						{
 							htmlText.Replace("%sub1%", ClassListData.getInstance().getClass(player.getSubClasses().get(1).getClassDefinition()).getClientCode());
 						}
@@ -499,7 +500,7 @@ public class VillageMaster: Folk
 							htmlText.Replace("<Button ALIGN=LEFT ICON=\"NORMAL\" action=\"bypass npc_%objectId%_Subclass 6 1\">%sub1%</Button>", "");
 						}
 						
-						if (player.getSubClasses().containsKey(2))
+						if (player.getSubClasses().ContainsKey(2))
 						{
 							htmlText.Replace("%sub2%", ClassListData.getInstance().getClass(player.getSubClasses().get(2).getClassDefinition()).getClientCode());
 						}
@@ -508,7 +509,7 @@ public class VillageMaster: Folk
 							htmlText.Replace("<Button ALIGN=LEFT ICON=\"NORMAL\" action=\"bypass npc_%objectId%_Subclass 6 2\">%sub2%</Button>", "");
 						}
 						
-						if (player.getSubClasses().containsKey(3))
+						if (player.getSubClasses().ContainsKey(3))
 						{
 							htmlText.Replace("%sub3%", ClassListData.getInstance().getClass(player.getSubClasses().get(3).getClassDefinition()).getClientCode());
 						}
@@ -540,9 +541,9 @@ public class VillageMaster: Folk
 						allowAddition = false;
 					}
 					
-					if (allowAddition && !player.getSubClasses().isEmpty())
+					if (allowAddition && player.getSubClasses().Count != 0)
 					{
-						foreach (SubClassHolder holder in player.getSubClasses().values())
+						foreach (SubClassHolder holder in player.getSubClasses().Values)
 						{
 							if (holder.getLevel() < 75)
 							{
@@ -806,7 +807,7 @@ public class VillageMaster: Folk
 				}
 			
 				// scan for already used subclasses
-				foreach (SubClassHolder subList in player.getSubClasses().values())
+				foreach (SubClassHolder subList in player.getSubClasses().Values)
 				{
 					CharacterClass subClassId = subList.getClassDefinition();
 					if (subClassId.EqualsOrChildOf(classId))
@@ -922,7 +923,7 @@ public class VillageMaster: Folk
 			return false;
 		}
 		
-		foreach (SubClassHolder sub in player.getSubClasses().values())
+		foreach (SubClassHolder sub in player.getSubClasses().Values)
 		{
 			CharacterClass subClassId = sub.getClassDefinition();
 			if (subClassId.EqualsOrChildOf(classId))
@@ -1076,11 +1077,14 @@ public class VillageMaster: Folk
 			
 			return;
 		}
-		if (!Util.isAlphaNumeric(clanName) || !isValidName(clanName) || (2 > clanName.Length))
+
+		if (string.IsNullOrEmpty(clanName) || !clanName.ContainsAlphaNumericOnly() || !isValidName(clanName) ||
+		    2 > clanName.Length)
 		{
 			player.sendPacket(SystemMessageId.CLAN_NAME_IS_INVALID);
 			return;
 		}
+
 		if (clanName.Length > 16)
 		{
 			player.sendPacket(SystemMessageId.CLAN_NAME_S_LENGTH_IS_INCORRECT);
@@ -1179,11 +1183,14 @@ public class VillageMaster: Folk
 			player.sendMessage("Pledge don't exists.");
 			return;
 		}
-		if (!Util.isAlphaNumeric(pledgeName) || !isValidName(pledgeName) || (2 > pledgeName.Length))
+
+		if (string.IsNullOrEmpty(pledgeName) || !pledgeName.ContainsAlphaNumericOnly() || !isValidName(pledgeName) ||
+		    2 > pledgeName.Length)
 		{
 			player.sendPacket(SystemMessageId.CLAN_NAME_IS_INVALID);
 			return;
 		}
+
 		if (pledgeName.Length > 16)
 		{
 			player.sendPacket(SystemMessageId.CLAN_NAME_S_LENGTH_IS_INCORRECT);
@@ -1269,13 +1276,13 @@ public class VillageMaster: Folk
 			player.sendPacket(ActionFailedPacket.STATIC_PACKET);
 			return;
 		}
-		
+
 		List<SkillLearn> skills = SkillTreeData.getInstance().getAvailablePledgeSkills(player.getClan());
-		if (skills.isEmpty())
+		if (skills.Count == 0)
 		{
 			if (player.getClan().getLevel() <= 1)
 			{
-				SystemMessagePacket sm = new SystemMessagePacket(SystemMessageId.YOU_DO_NOT_HAVE_ANY_FURTHER_SKILLS_TO_LEARN_COME_BACK_WHEN_YOU_HAVE_REACHED_LEVEL_S1);
+				SystemMessagePacket sm = new(SystemMessageId.YOU_DO_NOT_HAVE_ANY_FURTHER_SKILLS_TO_LEARN_COME_BACK_WHEN_YOU_HAVE_REACHED_LEVEL_S1);
 				if (player.getClan().getLevel() <= 1)
 				{
 					sm.Params.addInt(1);
@@ -1289,7 +1296,7 @@ public class VillageMaster: Folk
 			else
 			{
 				HtmlContent htmlContent = HtmlContent.LoadFromFile("html/villagemaster/NoMoreSkills.htm", player);
-				NpcHtmlMessagePacket html = new NpcHtmlMessagePacket(null, 0, htmlContent);
+				NpcHtmlMessagePacket html = new(null, 0, htmlContent);
 				player.sendPacket(html);
 			}
 		}

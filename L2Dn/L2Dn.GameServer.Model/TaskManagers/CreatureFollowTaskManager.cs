@@ -41,7 +41,7 @@ public class CreatureFollowTaskManager
 			}
 			_workingNormal = true;
 			
-			if (!NORMAL_FOLLOW_CREATURES.isEmpty())
+			if (NORMAL_FOLLOW_CREATURES.Count != 0)
 			{
 				foreach (var entry in NORMAL_FOLLOW_CREATURES)
 				{
@@ -70,7 +70,7 @@ public class CreatureFollowTaskManager
 			}
 			_workingAttack = true;
 			
-			if (!ATTACK_FOLLOW_CREATURES.isEmpty())
+			if (ATTACK_FOLLOW_CREATURES.Count != 0)
 			{
 				foreach (var entry in ATTACK_FOLLOW_CREATURES)
 				{
@@ -136,7 +136,7 @@ public class CreatureFollowTaskManager
 	
 	public bool isFollowing(Creature creature)
 	{
-		return NORMAL_FOLLOW_CREATURES.containsKey(creature) || ATTACK_FOLLOW_CREATURES.containsKey(creature);
+		return NORMAL_FOLLOW_CREATURES.ContainsKey(creature) || ATTACK_FOLLOW_CREATURES.ContainsKey(creature);
 	}
 	
 	public void addNormalFollow(Creature creature, int range)

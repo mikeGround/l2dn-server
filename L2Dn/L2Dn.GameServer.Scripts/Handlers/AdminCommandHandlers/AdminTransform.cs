@@ -1,3 +1,4 @@
+using System.Globalization;
 using L2Dn.GameServer.Handlers;
 using L2Dn.GameServer.Model;
 using L2Dn.GameServer.Model.Actor;
@@ -18,7 +19,7 @@ public class AdminTransform: IAdminCommandHandler
 		"admin_transform_menu",
 	};
 	
-	public bool useAdminCommand(String command, Player activeChar)
+	public bool useAdminCommand(string command, Player activeChar)
 	{
 		if (command.equals("admin_transform_menu"))
 		{
@@ -75,14 +76,13 @@ public class AdminTransform: IAdminCommandHandler
 				return false;
 			}
 			
-			String[] parts = command.Split(" ");
-			if ((parts.Length != 2) || !Util.isDigit(parts[1]))
+			string[] parts = command.Split(" ");
+			if ((parts.Length != 2) || !int.TryParse(parts[1], CultureInfo.InvariantCulture, out int id))
 			{
 				BuilderUtil.sendSysMessage(activeChar, "Usage: //transform <id>");
 				return false;
 			}
 			
-			int id = int.Parse(parts[1]);
 			if (!player.transform(id, true))
 			{
 				player.sendMessage("Unknown transformation ID: " + id);
@@ -93,7 +93,7 @@ public class AdminTransform: IAdminCommandHandler
 		return true;
 	}
 	
-	public String[] getAdminCommandList()
+	public string[] getAdminCommandList()
 	{
 		return ADMIN_COMMANDS;
 	}

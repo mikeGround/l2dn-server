@@ -88,26 +88,26 @@ public class ItemCommissionManager
 	public void showAuctions(Player player, Predicate<ItemTemplate> filter)
 	{
 		List<CommissionItem> commissionItems = new();
-		foreach (CommissionItem item in _commissionItems.values())
+		foreach (CommissionItem item in _commissionItems.Values)
 		{
 			if (filter(item.getItemInfo().getItem()))
 			{
-				commissionItems.add(item);
-				if (commissionItems.size() >= ITEMS_LIMIT_PER_REQUEST)
+				commissionItems.Add(item);
+				if (commissionItems.Count >= ITEMS_LIMIT_PER_REQUEST)
 				{
 					break;
 				}
 			}
 		}
 		
-		if (commissionItems.isEmpty())
+		if (commissionItems.Count == 0)
 		{
 			player.sendPacket(new ExResponseCommissionListPacket(CommissionListReplyType.ITEM_DOES_NOT_EXIST));
 			return;
 		}
 		
-		int chunks = commissionItems.size() / ExResponseCommissionListPacket.MAX_CHUNK_SIZE;
-		if (commissionItems.size() > (chunks * ExResponseCommissionListPacket.MAX_CHUNK_SIZE))
+		int chunks = commissionItems.Count / ExResponseCommissionListPacket.MAX_CHUNK_SIZE;
+		if (commissionItems.Count > (chunks * ExResponseCommissionListPacket.MAX_CHUNK_SIZE))
 		{
 			chunks++;
 		}
@@ -126,19 +126,19 @@ public class ItemCommissionManager
 	public void showPlayerAuctions(Player player)
 	{
 		List<CommissionItem> commissionItems = new();
-		foreach (CommissionItem c in _commissionItems.values())
+		foreach (CommissionItem c in _commissionItems.Values)
 		{
 			if (c.getItemInstance().getOwnerId() == player.getObjectId())
 			{
-				commissionItems.add(c);
-				if (commissionItems.size() == MAX_ITEMS_REGISTRED_PER_PLAYER)
+				commissionItems.Add(c);
+				if (commissionItems.Count == MAX_ITEMS_REGISTRED_PER_PLAYER)
 				{
 					break;
 				}
 			}
 		}
 		
-		if (!commissionItems.isEmpty())
+		if (commissionItems.Count != 0)
 		{
 			player.sendPacket(new ExResponseCommissionListPacket(CommissionListReplyType.PLAYER_AUCTIONS, commissionItems));
 		}
@@ -187,7 +187,7 @@ public class ItemCommissionManager
 		lock (this)
 		{
 			long playerRegisteredItems = 0;
-			foreach (CommissionItem item in _commissionItems.values())
+			foreach (CommissionItem item in _commissionItems.Values)
 			{
 				if (item.getItemInstance().getOwnerId() == player.getObjectId())
 				{
@@ -457,7 +457,7 @@ public class ItemCommissionManager
 	 */
 	public bool hasCommissionItems(int objectId)
 	{
-		foreach (CommissionItem item in _commissionItems.values())
+		foreach (CommissionItem item in _commissionItems.Values)
 		{
 			if (item.getItemInstance().getObjectId() == objectId)
 			{
@@ -474,7 +474,7 @@ public class ItemCommissionManager
 	 */
 	public bool hasCommissionedItemId(Player player, int itemId)
 	{
-		foreach (CommissionItem item in _commissionItems.values())
+		foreach (CommissionItem item in _commissionItems.Values)
 		{
 			if ((item.getItemInstance().getOwnerId() == player.getObjectId()) && (item.getItemInstance().getTemplate().getId() == itemId))
 			{

@@ -1,3 +1,4 @@
+using System.Globalization;
 using L2Dn.GameServer.Data;
 using L2Dn.GameServer.Handlers;
 using L2Dn.GameServer.Model;
@@ -22,16 +23,16 @@ public class AdminShutdown: IAdminCommandHandler
 		"admin_server_abort"
 	};
 	
-	public bool useAdminCommand(String command, Player activeChar)
+	public bool useAdminCommand(string command, Player activeChar)
 	{
 		if (command.startsWith("admin_server_shutdown"))
 		{
 			try
 			{
-				String val = command.Substring(22);
-				if (Util.isDigit(val))
+				string val = command.Substring(22);
+				if (int.TryParse(val, CultureInfo.InvariantCulture, out int valInt))
 				{
-					serverShutdown(activeChar, int.Parse(val), false);
+					serverShutdown(activeChar, valInt, false);
 				}
 				else
 				{
@@ -48,10 +49,10 @@ public class AdminShutdown: IAdminCommandHandler
 		{
 			try
 			{
-				String val = command.Substring(21);
-				if (Util.isDigit(val))
+				string val = command.Substring(21);
+				if (int.TryParse(val, CultureInfo.InvariantCulture, out int valInt))
 				{
-					serverShutdown(activeChar, int.Parse(val), true);
+					serverShutdown(activeChar, valInt, true);
 				}
 				else
 				{
@@ -71,7 +72,7 @@ public class AdminShutdown: IAdminCommandHandler
 		return true;
 	}
 	
-	public String[] getAdminCommandList()
+	public string[] getAdminCommandList()
 	{
 		return ADMIN_COMMANDS;
 	}

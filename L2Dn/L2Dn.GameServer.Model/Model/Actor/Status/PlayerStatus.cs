@@ -1,4 +1,5 @@
-﻿using L2Dn.GameServer.AI;
+﻿using L2Dn.Extensions;
+using L2Dn.GameServer.AI;
 using L2Dn.GameServer.Data.Xml;
 using L2Dn.GameServer.Enums;
 using L2Dn.GameServer.InstanceManagers;
@@ -15,7 +16,7 @@ namespace L2Dn.GameServer.Model.Actor.Status;
 
 public class PlayerStatus: PlayableStatus
 {
-	private double _currentCp = 0; // Current CP of the Player
+	private double _currentCp; // Current CP of the Player
 
 	public PlayerStatus(Player player)
 		: base(player)
@@ -243,10 +244,10 @@ public class PlayerStatus: PlayableStatus
 				smsg.Params.addString(getActiveChar().getName());
 
 				// Localisation related.
-				String targetName = attacker.getName();
+				string targetName = attacker.getName();
 				if (Config.MULTILANG_ENABLE && attacker.isNpc())
 				{
-					String[] localisation = NpcNameLocalisationData.getInstance()
+					string[] localisation = NpcNameLocalisationData.getInstance()
 						.getLocalisation(getActiveChar().getLang(), attacker.getId());
 					if (localisation != null)
 					{
@@ -316,8 +317,8 @@ public class PlayerStatus: PlayableStatus
 					pet.getAI().setIntention(CtrlIntention.AI_INTENTION_IDLE);
 				}
 
-				getActiveChar().getServitors().values()
-					.forEach(s => s.getAI().setIntention(CtrlIntention.AI_INTENTION_IDLE));
+				getActiveChar().getServitors().Values
+					.ForEach(s => s.getAI().setIntention(CtrlIntention.AI_INTENTION_IDLE));
 				return;
 			}
 

@@ -62,7 +62,7 @@ public struct RequestLuckyGamePlayPacket: IIncomingPacket<GameSession>
 				totalChance += item.getChance();
 				if (totalChance >= chance)
 				{
-					rewards.computeIfAbsent(LuckyGameItemType.COMMON, _ => new()).add(item);
+					rewards.computeIfAbsent(LuckyGameItemType.COMMON, _ => new()).Add(item);
 					break;
 				}
 			}
@@ -77,7 +77,7 @@ public struct RequestLuckyGamePlayPacket: IIncomingPacket<GameSession>
 					totalChance += item.getChance();
 					if (totalChance >= chanceModify)
 					{
-						rewards.computeIfAbsent(LuckyGameItemType.RARE, _ => new()).add(item);
+						rewards.computeIfAbsent(LuckyGameItemType.RARE, _ => new()).Add(item);
 						blackCat = true;
 						break;
 					}
@@ -86,18 +86,18 @@ public struct RequestLuckyGamePlayPacket: IIncomingPacket<GameSession>
 				if (playCount == holder.getMaxModifyRewardGame())
 				{
 					rewards.computeIfAbsent(LuckyGameItemType.RARE, _ => new())
-						.add(modifyReward.get(Rnd.get(modifyReward.size())));
+						.Add(modifyReward.GetRandomElement());
 					
 					blackCat = true;
 				}
 			}
 		}
 
-		int totalWeight = rewards.values().Select(list =>
+		int totalWeight = rewards.Values.Select(list =>
 			list.Select(item => ItemData.getInstance().getTemplate(item.getId()).getWeight()).Sum()).Sum();
 		
 		// Check inventory capacity
-		if (!rewards.isEmpty() && (!player.getInventory().validateCapacity(rewards.size()) || !player.getInventory().validateWeight(totalWeight)))
+		if (rewards.Count != 0 && (!player.getInventory().validateCapacity(rewards.Count) || !player.getInventory().validateWeight(totalWeight)))
 		{
 			player.sendPacket(_type == LuckyGameType.LUXURY ? ExBettingLuckyGameResultPacket.LUXURY_INVALID_CAPACITY : ExBettingLuckyGameResultPacket.NORMAL_INVALID_CAPACITY);
 			player.sendPacket(SystemMessageId.YOUR_INVENTORY_IS_EITHER_FULL_OR_OVERWEIGHT);
@@ -114,7 +114,7 @@ public struct RequestLuckyGamePlayPacket: IIncomingPacket<GameSession>
 		{
 			int serverGameNumber = LuckyGameData.getInstance().increaseGame();
 			holder.getUniqueReward().Where(reward => reward.getPoints() == serverGameNumber).ForEach(item =>
-				rewards.computeIfAbsent(LuckyGameItemType.UNIQUE, _ => new()).add(item));
+				rewards.computeIfAbsent(LuckyGameItemType.UNIQUE, _ => new()).Add(item));
 		}
 		
 		player.sendPacket(new ExBettingLuckyGameResultPacket(LuckyGameResultType.SUCCESS, _type, rewards, (int) (_type == LuckyGameType.LUXURY ? player.getInventory().getInventoryItemCount(LUXURY_FORTUNE_READING_TICKET, -1) : player.getInventory().getInventoryItemCount(FORTUNE_READING_TICKET, -1))));

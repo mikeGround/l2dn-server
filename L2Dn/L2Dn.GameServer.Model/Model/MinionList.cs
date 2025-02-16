@@ -72,7 +72,7 @@ public class MinionList
 	 */
 	public void onMinionSpawn(Monster minion)
 	{
-		_spawnedMinions.add(minion);
+		_spawnedMinions.Add(minion);
 	}
 	
 	/**
@@ -83,7 +83,7 @@ public class MinionList
 	{
 		if (_master.isRaid() || force || Config.FORCE_DELETE_MINIONS)
 		{
-			if (!_spawnedMinions.isEmpty())
+			if (_spawnedMinions.Count != 0)
 			{
 				foreach (Monster minion in _spawnedMinions)
 				{
@@ -97,7 +97,7 @@ public class MinionList
 				_spawnedMinions.Clear();
 			}
 			
-			if (!_respawnTasks.isEmpty())
+			if (_respawnTasks.Count != 0)
 			{
 				foreach (ScheduledFuture task in _respawnTasks)
 				{
@@ -128,7 +128,7 @@ public class MinionList
 		int time = respawnTime < 0 ? _master.isRaid() ? (int) Config.RAID_MINION_RESPAWN_TIMER : 0 : respawnTime;
 		if ((time > 0) && !_master.isAlikeDead())
 		{
-			_respawnTasks.add(ThreadPool.schedule(new MinionRespawnTask(this, minion), time));
+			_respawnTasks.Add(ThreadPool.schedule(new MinionRespawnTask(this, minion), time));
 		}
 	}
 	
@@ -231,7 +231,7 @@ public class MinionList
 				initializeNpc(_list._master, _minion);
 				
 				// assist master
-				if (!_list._master.getAggroList().isEmpty())
+				if (_list._master.getAggroList().Count != 0)
 				{
 					_minion.getAggroList().putAll(_list._master.getAggroList());
 					_minion.getAI().setIntention(CtrlIntention.AI_INTENTION_ATTACK, _minion.getAggroList().Keys.First());
@@ -341,7 +341,7 @@ public class MinionList
 	
 	public int countSpawnedMinions()
 	{
-		return _spawnedMinions.size();
+		return _spawnedMinions.Count;
 	}
 	
 	public long lazyCountSpawnedMinionsGroups()

@@ -30,14 +30,14 @@ public class InitialEquipmentData: DataReaderBase
 
 	public void load()
 	{
-		_initialEquipmentList.clear();
+		_initialEquipmentList.Clear();
 
 		const string normal = "stats/initialEquipment.xml";
 		const string @event = "stats/initialEquipmentEvent.xml";
 		XDocument document = LoadXmlDocument(DataFileLocation.Data, Config.INITIAL_EQUIPMENT_EVENT ? @event : normal);
 		document.Elements("list").Elements("equipment").ForEach(parseEquipment);
 
-		LOGGER.Info(GetType().Name + ": Loaded " + _initialEquipmentList.size() + " initial equipment data.");
+		LOGGER.Info(GetType().Name + ": Loaded " + _initialEquipmentList.Count + " initial equipment data.");
 	}
 	
 	/**
@@ -54,7 +54,7 @@ public class InitialEquipmentData: DataReaderBase
 			int id = el.GetAttributeValueAsInt32("id");
 			long count = el.Attribute("count").GetInt64(1);
 			bool equipped = el.Attribute("equipped").GetBoolean(false); 
-			equipList.add(new PlayerItemTemplate(id, count, equipped));
+			equipList.Add(new PlayerItemTemplate(id, count, equipped));
 		});
 		
 		_initialEquipmentList.put(classId, equipList);

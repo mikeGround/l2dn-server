@@ -28,10 +28,10 @@ public class AdminFence: IAdminCommandHandler
 		"admin_gofence"
 	};
 	
-	public bool useAdminCommand(String command, Player activeChar)
+	public bool useAdminCommand(string command, Player activeChar)
 	{
 		StringTokenizer st = new StringTokenizer(command, " ");
-		String cmd = st.nextToken();
+		string cmd = st.nextToken();
 		switch (cmd)
 		{
 			case "admin_addfence":
@@ -149,14 +149,14 @@ public class AdminFence: IAdminCommandHandler
 		return true;
 	}
 	
-	public String[] getAdminCommandList()
+	public string[] getAdminCommandList()
 	{
 		return ADMIN_COMMANDS;
 	}
 	
 	private void sendHtml(Player activeChar, int page)
 	{
-		PageResult result = PageBuilder.newBuilder(FenceData.getInstance().getFences().values().ToList(), 10, "bypass -h admin_listfence").currentPage(page).style(ButtonsStyle.INSTANCE).bodyHandler((pages, fence, sb) =>
+		PageResult result = PageBuilder.newBuilder(FenceData.getInstance().getFences().Values.ToList(), 10, "bypass -h admin_listfence").currentPage(page).style(ButtonsStyle.INSTANCE).bodyHandler((pages, fence, sb) =>
 		{
 			sb.Append("<tr><td>");
 			sb.Append(fence.getName() == null ? fence.getId() : fence.getName());

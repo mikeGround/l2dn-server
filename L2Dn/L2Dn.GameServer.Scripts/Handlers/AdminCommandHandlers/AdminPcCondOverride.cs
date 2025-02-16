@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text;
 using L2Dn.GameServer.Data;
 using L2Dn.GameServer.Enums;
@@ -27,7 +28,7 @@ public class AdminPcCondOverride: IAdminCommandHandler
 		"admin_set_exception",
 	};
 	
-	public bool useAdminCommand(String command, Player activeChar)
+	public bool useAdminCommand(string command, Player activeChar)
 	{
 		StringTokenizer st = new StringTokenizer(command);
 		if (st.hasMoreTokens())
@@ -53,10 +54,10 @@ public class AdminPcCondOverride: IAdminCommandHandler
 				{
 					if (st.hasMoreTokens())
 					{
-						String token = st.nextToken();
-						if (Util.isDigit(token))
+						string token = st.nextToken();
+						if (int.TryParse(token, CultureInfo.InvariantCulture, out int tokenInt))
 						{
-							PlayerCondOverride ex = (PlayerCondOverride)int.Parse(token);
+							PlayerCondOverride ex = (PlayerCondOverride)tokenInt;
 							if (Enum.IsDefined(ex))
 							{
 								if (activeChar.canOverrideCond(ex))
@@ -110,7 +111,7 @@ public class AdminPcCondOverride: IAdminCommandHandler
 		return true;
 	}
 	
-	public String[] getAdminCommandList()
+	public string[] getAdminCommandList()
 	{
 		return COMMANDS;
 	}

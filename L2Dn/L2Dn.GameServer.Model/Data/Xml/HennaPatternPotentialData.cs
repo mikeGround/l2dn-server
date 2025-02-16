@@ -32,9 +32,9 @@ public class HennaPatternPotentialData: DataReaderBase
 	
 	public void load()
 	{
-		_potenFees.clear();
-		_potenExpTable.clear();
-		_potentials.clear();
+		_potenFees.Clear();
+		_potenExpTable.Clear();
+		_potentials.Clear();
 		_enchancedReset.Clear();
 		
 		XDocument document = LoadXmlDocument(DataFileLocation.Data, "stats/hennaPatternPotential.xml");
@@ -46,7 +46,7 @@ public class HennaPatternPotentialData: DataReaderBase
 			element.Elements("hiddenPotentials").Elements("poten").ForEach(parseHiddenPotenElement);
 		});
 		
-		LOGGER.Info(GetType().Name + ": Loaded " + _potenFees.size() + " dye pattern fee data.");
+		LOGGER.Info(GetType().Name + ": Loaded " + _potenFees.Count + " dye pattern fee data.");
 		
 	}
 
@@ -61,7 +61,7 @@ public class HennaPatternPotentialData: DataReaderBase
 		{
 			int itemId = el.GetAttributeValueAsInt32("id");
 			long itemCount = el.Attribute("count").GetInt64(1);
-			items.add(new ItemHolder(itemId, itemCount));
+			items.Add(new ItemHolder(itemId, itemCount));
 		});
 		
 		element.Elements("dailyCount").ForEach(el =>
@@ -90,7 +90,7 @@ public class HennaPatternPotentialData: DataReaderBase
 		}
 		else
 		{
-			_enchancedReset.add(new ItemHolder(itemId, itemCount));
+			_enchancedReset.Add(new ItemHolder(itemId, itemCount));
 		}
 	}
 
@@ -125,7 +125,7 @@ public class HennaPatternPotentialData: DataReaderBase
 	
 	public int getMaxPotenEnchantStep()
 	{
-		return _potenFees.size();
+		return _potenFees.Count;
 	}
 	
 	public List<ItemHolder> getEnchantReset()
@@ -170,11 +170,11 @@ public class HennaPatternPotentialData: DataReaderBase
 	public ICollection<int> getSkillIdsBySlotId(int slotId)
 	{
 		List<int> skillIds = new();
-		foreach (DyePotential potential in _potentials.values())
+		foreach (DyePotential potential in _potentials.Values)
 		{
 			if (potential.getSlotId() == slotId)
 			{
-				skillIds.add(potential.getSkillId());
+				skillIds.Add(potential.getSkillId());
 			}
 		}
 		return skillIds;

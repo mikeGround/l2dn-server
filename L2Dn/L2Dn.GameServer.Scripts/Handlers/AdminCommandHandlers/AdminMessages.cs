@@ -1,3 +1,4 @@
+using System.Globalization;
 using L2Dn.GameServer.Handlers;
 using L2Dn.GameServer.Model.Actor;
 using L2Dn.GameServer.Network.Enums;
@@ -20,7 +21,7 @@ public class AdminMessages: IAdminCommandHandler
 		"admin_msgx"
 	};
 	
-	public bool useAdminCommand(String command, Player activeChar)
+	public bool useAdminCommand(string command, Player activeChar)
 	{
 		if (command.startsWith("admin_msg "))
 		{
@@ -36,15 +37,15 @@ public class AdminMessages: IAdminCommandHandler
 		}
 		else if (command.startsWith("admin_msgx "))
 		{
-			String[] tokens = command.Split(" ");
-			if ((tokens.Length <= 2) || !Util.isDigit(tokens[1]))
+			string[] tokens = command.Split(" ");
+			if ((tokens.Length <= 2) || !int.TryParse(tokens[1], CultureInfo.InvariantCulture, out int token1))
 			{
 				BuilderUtil.sendSysMessage(activeChar, "Command format: //msgx <SYSTEM_MSG_ID> [item:Id] [skill:Id] [npc:Id] [zone:x,y,x] [castle:Id] [str:'text']");
 				return false;
 			}
 			
-			SystemMessagePacket sm = new SystemMessagePacket((SystemMessageId)int.Parse(tokens[1]));
-			String val;
+			SystemMessagePacket sm = new SystemMessagePacket((SystemMessageId)token1);
+			string val;
 			int lastPos = 0;
 			for (int i = 2; i < tokens.Length; i++)
 			{
@@ -91,7 +92,7 @@ public class AdminMessages: IAdminCommandHandler
 		return false;
 	}
 	
-	public String[] getAdminCommandList()
+	public string[] getAdminCommandList()
 	{
 		return ADMIN_COMMANDS;
 	}

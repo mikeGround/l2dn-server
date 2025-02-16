@@ -37,7 +37,7 @@ public readonly struct ExPetRankingListPacket: IOutgoingPacket
 		writer.WriteByte((byte)_tabId);
 		writer.WriteInt16((short)_type);
 		writer.WriteInt32(_petItemObjectId);
-		if (!_playerList.isEmpty())
+		if (_playerList.Count != 0)
 		{
 			writeFilteredRankingData(writer, _tabId, _tabId.getScopeByGroup(_season));
 		}
@@ -120,12 +120,12 @@ public readonly struct ExPetRankingListPacket: IOutgoingPacket
 			}
 			default:
 			{
-				limited = new List<System.Collections.Generic.KeyValuePair<int, StatSet>>();
+				limited = new List<KeyValuePair<int, StatSet>>();
 				break;
 			}
 		}
 		
-		writer.WriteInt32(limited.size());
+		writer.WriteInt32(limited.Count);
 		int rank = 1;
 		foreach (var data in limited)
 		{

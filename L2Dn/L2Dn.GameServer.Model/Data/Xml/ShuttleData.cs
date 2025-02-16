@@ -30,20 +30,20 @@ public class ShuttleData: DataReaderBase
 	[MethodImpl(MethodImplOptions.Synchronized)] 
 	public void load()
 	{
-		if (!_shuttleInstances.isEmpty())
+		if (_shuttleInstances.Count != 0)
 		{
-			foreach (Shuttle shuttle in _shuttleInstances.values())
+			foreach (Shuttle shuttle in _shuttleInstances.Values)
 			{
 				shuttle.deleteMe();
 			}
-			_shuttleInstances.clear();
+			_shuttleInstances.Clear();
 		}
 		
 		XDocument document = LoadXmlDocument(DataFileLocation.Data, "ShuttleData.xml");
 		document.Elements("list").Elements("shuttle").ForEach(parseElement);
 		
 		init();
-		LOGGER.Info(GetType().Name + ": Loaded " + _shuttles.size() + " shuttles.");
+		LOGGER.Info(GetType().Name + ": Loaded " + _shuttles.Count + " shuttles.");
 	}
 
 	private void parseElement(XElement element)
@@ -103,7 +103,7 @@ public class ShuttleData: DataReaderBase
 
 	private void init()
 	{
-		foreach (ShuttleDataHolder data in _shuttles.values())
+		foreach (ShuttleDataHolder data in _shuttles.Values)
 		{
 			Shuttle shuttle = new Shuttle(new CreatureTemplate(new StatSet()));
 			shuttle.setData(data);
@@ -120,7 +120,7 @@ public class ShuttleData: DataReaderBase
 	
 	public Shuttle getShuttle(int id)
 	{
-		foreach (Shuttle shuttle in _shuttleInstances.values())
+		foreach (Shuttle shuttle in _shuttleInstances.Values)
 		{
 			if ((shuttle.getObjectId() == id) || (shuttle.getId() == id))
 			{

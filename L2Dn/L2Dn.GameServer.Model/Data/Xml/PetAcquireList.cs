@@ -23,14 +23,14 @@ public class PetAcquireList: DataReaderBase
 	
 	public void load()
 	{
-		_skills.clear();
+		_skills.Clear();
 		
 		XDocument document = LoadXmlDocument(DataFileLocation.Data, "PetAcquireList.xml");
 		document.Elements("list").Elements("pet").ForEach(parseElement);
 		
-		if (!_skills.isEmpty())
+		if (_skills.Count != 0)
 		{
-			LOGGER.Info(GetType().Name + ": Loaded " + _skills.size() + " pet skills.");
+			LOGGER.Info(GetType().Name + ": Loaded " + _skills.Count + " pet skills.");
 		}
 		else
 		{
@@ -52,7 +52,7 @@ public class PetAcquireList: DataReaderBase
 			int item = el.Attribute("item").GetInt32(-1);
 			long itemAmount = el.Attribute("itemAmount").GetInt64(-1);
 
-			list.add(new PetSkillAcquireHolder(id, lvl, reqLvl, evolve, item < 0
+			list.Add(new PetSkillAcquireHolder(id, lvl, reqLvl, evolve, item < 0
 				? null
 				: new ItemHolder(item, itemAmount)));
 		});

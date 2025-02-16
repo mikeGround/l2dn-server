@@ -67,13 +67,13 @@ public struct ExRequestMultiEnchantItemListPacket: IIncomingPacket<GameSession>
 		int[] slots = new int[_slotId];
 		for (int i = 1; i <= _slotId; i++)
 		{
-			if (!request.checkMultiEnchantingItemsByObjectId(_itemObjectId.get(i)))
+			if (!request.checkMultiEnchantingItemsByObjectId(_itemObjectId[i]))
 			{
 				player.removeRequest<EnchantItemRequest>();
 				return ValueTask.CompletedTask;
 			}
 			
-			slots[i - 1] = getMultiEnchantingSlotByObjectId(request, _itemObjectId.get(i));
+			slots[i - 1] = getMultiEnchantingSlotByObjectId(request, _itemObjectId[i]);
 		}
 		
 		request.setProcessing(true);
@@ -324,7 +324,7 @@ public struct ExRequestMultiEnchantItemListPacket: IIncomingPacket<GameSession>
 								player.sendPacket(sm);
 								ItemHolder itemHolder = new ItemHolder(crystalId, count);
 								
-								failureReward.put(failureReward.size() + 1, itemHolder);
+								failureReward.put(failureReward.Count + 1, itemHolder);
 							}
 							
 							// if (crystals != null)
@@ -335,20 +335,20 @@ public struct ExRequestMultiEnchantItemListPacket: IIncomingPacket<GameSession>
 							if ((crystalId == 0) || (count == 0))
 							{
 								ItemHolder itemHolder = new ItemHolder(0, 0);
-								failureReward.put(failureReward.size() + 1, itemHolder);
+								failureReward.put(failureReward.Count + 1, itemHolder);
 								result.put(i, "NO_CRYSTAL");
 							}
 							else
 							{
 								ItemHolder itemHolder = new ItemHolder(0, 0);
-								failureReward.put(failureReward.size() + 1, itemHolder);
+								failureReward.put(failureReward.Count + 1, itemHolder);
 								result.put(i, "FAIL");
 							}
 							
 							ItemChanceHolder destroyReward = ItemCrystallizationData.getInstance().getItemOnDestroy(player, enchantItem);
 							if ((destroyReward != null) && (Rnd.get(100) < destroyReward.getChance()))
 							{
-								failureReward.put(failureReward.size() + 1, destroyReward);
+								failureReward.put(failureReward.Count + 1, destroyReward);
 								player.addItem("Enchant", destroyReward.getId(), destroyReward.getCount(), null, true);
 								player.sendPacket(new EnchantResultPacket(EnchantResultPacket.FAIL, destroyReward, null, 0));
 							}
@@ -410,7 +410,7 @@ public struct ExRequestMultiEnchantItemListPacket: IIncomingPacket<GameSession>
 			}
 		}
 		
-		foreach (ItemHolder failure in failureReward.values())
+		foreach (ItemHolder failure in failureReward.Values)
 		{
 			request.addMultiEnchantFailItems(failure);
 		}

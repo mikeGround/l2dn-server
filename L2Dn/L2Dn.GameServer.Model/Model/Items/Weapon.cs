@@ -1,3 +1,4 @@
+using System.Globalization;
 using L2Dn.GameServer.Enums;
 using L2Dn.GameServer.Model.Actor;
 using L2Dn.GameServer.Model.Events;
@@ -56,11 +57,13 @@ public class Weapon: ItemTemplate
 		_spiritShotCount = set.getInt("spiritshots", 0);
 		_mpConsume = set.getInt("mp_consume", 0);
 		_baseAttackRange = set.getInt("attack_range", 40);
-		String[] damageRange = set.getString("damage_range", "").Split(";"); // 0?;0?;fan sector;base attack angle
-		if ((damageRange.Length > 1) && Util.isDigit(damageRange[2]) && Util.isDigit(damageRange[3]))
+		string[] damageRange = set.getString("damage_range", "").Split(";"); // 0?;0?;fan sector;base attack angle
+		if ((damageRange.Length >= 4) &&
+		    int.TryParse(damageRange[2], CultureInfo.InvariantCulture, out int baseAttackRadius) &&
+		    int.TryParse(damageRange[3], CultureInfo.InvariantCulture, out int baseAttackAngle))
 		{
-			_baseAttackRadius = int.Parse(damageRange[2]);
-			_baseAttackAngle = int.Parse(damageRange[3]);
+			_baseAttackRadius = baseAttackRadius;
+			_baseAttackAngle = baseAttackAngle;
 		}
 		else
 		{
@@ -68,11 +71,11 @@ public class Weapon: ItemTemplate
 			_baseAttackAngle = 0;
 		}
 		
-		String[] reducedSoulshots = set.getString("reduced_soulshot", "").Split(",");
+		string[] reducedSoulshots = set.getString("reduced_soulshot", "").Split(",");
 		_reducedSoulshotChance = (reducedSoulshots.Length == 2) ? int.Parse(reducedSoulshots[0]) : 0;
 		_reducedSoulshot = (reducedSoulshots.Length == 2) ? int.Parse(reducedSoulshots[1]) : 0;
 		
-		String[] reducedMpConsume = set.getString("reduced_mp_consume", "").Split(",");
+		string[] reducedMpConsume = set.getString("reduced_mp_consume", "").Split(",");
 		_reducedMpConsumeChance = (reducedMpConsume.Length == 2) ? int.Parse(reducedMpConsume[0]) : 0;
 		_reducedMpConsume = (reducedMpConsume.Length == 2) ? int.Parse(reducedMpConsume[1]) : 0;
 		_changeWeaponId = set.getInt("change_weaponId", 0);

@@ -117,7 +117,7 @@ public class AutoPlayTaskManager
 						// Logic adjustment for summons not attacking when in offline play.
 						if (player.isOfflinePlay() && player.hasSummon())
 						{
-							foreach (Summon summon in player.getServitors().values())
+							foreach (Summon summon in player.getServitors().Values)
 							{
 								if (summon.hasAI() && !summon.isMoving() && !summon.isDisabled() &&
 								    summon.getAI().getIntention() != CtrlIntention.AI_INTENTION_ATTACK &&
@@ -140,7 +140,7 @@ public class AutoPlayTaskManager
 						// Summon Attack.
 						if (player.hasSummon() && player.getAutoUseSettings().getAutoActions().Contains(SUMMON_ATTACK_ACTION))
 						{
-							foreach (Summon summon in player.getServitors().values())
+							foreach (Summon summon in player.getServitors().Values)
 							{
 								if (summon.hasAI() && !summon.isMoving() && !summon.isDisabled() && summon.getAI().getIntention() != CtrlIntention.AI_INTENTION_ATTACK && summon.getAI().getIntention() != CtrlIntention.AI_INTENTION_CAST && creature.isAutoAttackable(player) && GeoEngine.getInstance().canSeeTarget(player, creature))
 								{
@@ -177,7 +177,7 @@ public class AutoPlayTaskManager
 								Weapon weapon = player.getActiveWeaponItem();
 								if (weapon != null)
 								{
-									int idleCount = IDLE_COUNT.getOrDefault(player, 0);
+									int idleCount = IDLE_COUNT.GetValueOrDefault(player);
 									if (idleCount > 10)
 									{
 										bool ranged = weapon.getItemType().isRanged();
@@ -285,11 +285,13 @@ public class AutoPlayTaskManager
 						}
 						
 						// Check creature target.
-						if (player.getAutoPlaySettings().isRespectfulHunting() && !nearby.isPlayable() && nearby.getTarget() != null && nearby.getTarget() != player && !player.getServitors().containsKey(nearby.getTarget().getObjectId()))
+						if (player.getAutoPlaySettings().isRespectfulHunting() && !nearby.isPlayable() &&
+						    nearby.getTarget() != null && nearby.getTarget() != player &&
+						    !player.getServitors().ContainsKey(nearby.getTarget().getObjectId()))
 						{
 							continue; // target
 						}
-						
+
 						// Check next target mode.
 						if (!isTargetModeValid(targetMode, player, nearby))
 						{
@@ -408,7 +410,7 @@ public class AutoPlayTaskManager
 				// Pets must follow their owner.
 				if (player.hasServitors())
 				{
-					foreach (Summon summon in player.getServitors().values())
+					foreach (Summon summon in player.getServitors().Values)
 					{
 						summon.followOwner();
 					}

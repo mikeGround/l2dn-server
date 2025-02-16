@@ -1,3 +1,4 @@
+using L2Dn.Extensions;
 using L2Dn.GameServer.Data.Sql;
 using L2Dn.GameServer.Data.Xml;
 using L2Dn.GameServer.Db;
@@ -172,7 +173,7 @@ public class DailyTaskManager
 		{
 			int VP = player.getVitalityPoints();
 			player.setVitalityPoints(VP + vitality, false);
-			foreach (SubClassHolder subclass in player.getSubClasses().values())
+			foreach (SubClassHolder subclass in player.getSubClasses().Values)
 			{
 				int VPS = subclass.getVitalityPoints();
 				subclass.setVitalityPoints(VPS + vitality);
@@ -213,7 +214,7 @@ public class DailyTaskManager
 		foreach (Player player in World.getInstance().getPlayers())
 		{
 			player.setVitalityPoints(PlayerStat.MAX_VITALITY_POINTS, false);
-			foreach (SubClassHolder subclass in player.getSubClasses().values())
+			foreach (SubClassHolder subclass in player.getSubClasses().Values)
 			{
 				subclass.setVitalityPoints(PlayerStat.MAX_VITALITY_POINTS);
 			}
@@ -247,7 +248,7 @@ public class DailyTaskManager
 	
 	private void resetClanBonus()
 	{
-		ClanTable.getInstance().getClans().forEach(x => x.resetClanBonus());
+		ClanTable.getInstance().getClans().ForEach(x => x.resetClanBonus());
 		LOGGER.Info("Daily clan bonus has been reset.");
 	}
 	
@@ -448,7 +449,7 @@ public class DailyTaskManager
 	
 	private void resetDailyMissionRewards()
 	{
-		DailyMissionData.getInstance().getDailyMissionData().forEach(x => x.reset());
+		DailyMissionData.getInstance().getDailyMissionData().ForEach(x => x.reset());
 	}
 	
 	private void resetTimedHuntingZones()
@@ -579,7 +580,7 @@ public class DailyTaskManager
 	
 	private void resetDailyPrimeShopData()
 	{
-		foreach (PrimeShopGroup holder in PrimeShopData.getInstance().getPrimeItems().values())
+		foreach (PrimeShopGroup holder in PrimeShopData.getInstance().getPrimeItems().Values)
 		{
 			// Update data for offline players.
 			try

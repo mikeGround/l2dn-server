@@ -33,7 +33,7 @@ public class ChallengePoint
 	{
 		// LOGGER.info("Storing Challenge Points for " + _owner);
 		
-		if (_challengePoints.isEmpty())
+		if (_challengePoints.Count == 0)
 		{
 			return;
 		}
@@ -91,8 +91,8 @@ public class ChallengePoint
 	
 	public void restoreChallengePoints()
 	{
-		_challengePoints.clear();
-		_challengePointsRecharges.clear();
+		_challengePoints.Clear();
+		_challengePointsRecharges.Clear();
 
 		try
 		{
@@ -159,17 +159,12 @@ public class ChallengePoint
 	
 	public int getChallengePointsRecharges(int groupId, int optionIndex)
 	{
-		Map<int, int> options = _challengePointsRecharges.get(groupId);
-		if (options != null)
-		{
-			return options.getOrDefault(optionIndex, 0);
-		}
-		return 0;
+		return _challengePointsRecharges.GetValueOrDefault(groupId)?.GetValueOrDefault(optionIndex) ?? 0;
 	}
 	
 	public void addChallengePointsRecharge(int groupId, int optionIndex, int amount)
 	{
-		Map<int, int> options = _challengePointsRecharges.get(groupId);
+		Map<int, int>? options = _challengePointsRecharges.GetValueOrDefault(groupId);
 		if (options == null)
 		{
 			options = new();
@@ -193,7 +188,7 @@ public class ChallengePoint
 	public ChallengePointInfoHolder[] initializeChallengePoints()
 	{
 		Map<int, int> challengePoints = getChallengePoints();
-		ChallengePointInfoHolder[] info = new ChallengePointInfoHolder[challengePoints.size()];
+		ChallengePointInfoHolder[] info = new ChallengePointInfoHolder[challengePoints.Count];
 		int i = 0;
 		foreach (var entry in challengePoints)
 		{
@@ -212,7 +207,7 @@ public class ChallengePoint
 	
 	public bool canAddPoints(int categoryId, int points)
 	{
-		int totalPoints = _challengePoints.getOrDefault(categoryId, 0) + points;
+		int totalPoints = _challengePoints.GetValueOrDefault(categoryId) + points;
 		int maxPoints = EnchantChallengePointData.getInstance().getMaxPoints();
 		return maxPoints > totalPoints;
 	}

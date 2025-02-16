@@ -19,8 +19,8 @@ public class RandomCraftData: DataReaderBase
 	private static readonly Map<int, RandomCraftExtractDataHolder> EXTRACT_DATA = new();
 	private static readonly Map<int, RandomCraftRewardDataHolder> REWARD_DATA = new();
 	
-	private RandomCraftRewardDataHolder[] _randomRewards = Array.Empty<RandomCraftRewardDataHolder>();
-	private int _randomRewardIndex = 0;
+	private RandomCraftRewardDataHolder[] _randomRewards = [];
+	private int _randomRewardIndex;
 	
 	protected RandomCraftData()
 	{
@@ -29,20 +29,20 @@ public class RandomCraftData: DataReaderBase
 	
 	public void load()
 	{
-		EXTRACT_DATA.clear();
+		EXTRACT_DATA.Clear();
 
 		{
 			XDocument document = LoadXmlDocument(DataFileLocation.Data, "RandomCraftExtractData.xml");
 			document.Elements("list").Elements("extract").Elements("item").ForEach(parseExtractElement);
 		}
 
-		int extractCount = EXTRACT_DATA.size();
+		int extractCount = EXTRACT_DATA.Count;
 		if (extractCount > 0)
 		{
 			LOGGER.Info(GetType().Name + ": Loaded " + extractCount + " extraction data.");
 		}
 		
-		REWARD_DATA.clear();
+		REWARD_DATA.Clear();
 
 		{
 			string filePath = Path.Combine(Config.DATAPACK_ROOT_PATH, "RandomCraftRewardData.xml");
@@ -51,7 +51,7 @@ public class RandomCraftData: DataReaderBase
 			document.Elements("list").Elements("rewards").Elements("item").ForEach(parseRewardElement);
 		}
 		
-		int rewardCount = REWARD_DATA.size();
+		int rewardCount = REWARD_DATA.Count;
 		if (rewardCount > 4)
 		{
 			LOGGER.Info(GetType().Name + ": Loaded " + rewardCount + " rewards.");
@@ -59,7 +59,7 @@ public class RandomCraftData: DataReaderBase
 		else if (rewardCount > 0)
 		{
 			LOGGER.Info(GetType().Name + ": Random craft rewards should be more than " + rewardCount + ".");
-			REWARD_DATA.clear();
+			REWARD_DATA.Clear();
 		}
 		
 		randomizeRewards();
@@ -95,7 +95,7 @@ public class RandomCraftData: DataReaderBase
 
 	public bool isEmpty()
 	{
-		return REWARD_DATA.isEmpty();
+		return REWARD_DATA.Count == 0;
 	}
 	
 	[MethodImpl(MethodImplOptions.Synchronized)] 
@@ -121,7 +121,7 @@ public class RandomCraftData: DataReaderBase
 	private void randomizeRewards()
 	{
 		_randomRewardIndex = -1;
-		_randomRewards = REWARD_DATA.values().ToArray();
+		_randomRewards = REWARD_DATA.Values.ToArray();
 		Random.Shared.Shuffle(_randomRewards);
 	}
 	
